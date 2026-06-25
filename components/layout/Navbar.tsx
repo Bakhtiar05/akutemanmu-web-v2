@@ -66,7 +66,7 @@ export default function Navbar({ variant = 'default' }: NavbarProps) {
 
         <div className="hidden md:flex items-center gap-2">
           <Link href="/admin/login" className="btn btn-ghost text-[0.92rem]">Masuk</Link>
-          <Link href="/#services" className="btn btn-primary text-[0.88rem] px-6 py-2.5">Mulai Gratis</Link>
+          <Link href="/konsultasi" className="btn btn-primary text-[0.88rem] px-6 py-2.5">Mulai Gratis</Link>
         </div>
 
         <button
@@ -98,7 +98,7 @@ export default function Navbar({ variant = 'default' }: NavbarProps) {
         ))}
         <hr className="my-3 border-neutral-200" />
         <Link href="/admin/login" onClick={() => setMenuOpen(false)} className="btn btn-ghost justify-center">Masuk</Link>
-        <Link href="/#services" onClick={() => setMenuOpen(false)} className="btn btn-primary justify-center">Mulai Gratis</Link>
+        <Link href="/konsultasi" onClick={() => setMenuOpen(false)} className="btn btn-primary justify-center">Mulai Gratis</Link>
       </div>
     </header>
   )

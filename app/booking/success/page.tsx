@@ -1,0 +1,129 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
+import { CheckCircle2, ArrowRight, Calendar, Clock, Video, MapPin, Copy } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+
+export default function BookingSuccessPage() {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [successData, setSuccessData] = useState<{
+    requestNumber: string;
+    date: string;
+    time: string;
+    method: string;
+  } | null>(null);
+
+  useEffect(() => {
+    // Retrieve success data from session storage (set during successful form submission)
+    const data = sessionStorage.getItem("booking-success");
+    if (data) {
+      setSuccessData(JSON.parse(data));
+      // Optional: Clear it so refreshing the page doesn't keep showing it forever
+      // sessionStorage.removeItem("booking-success");
+    } else {
+      // If no data, maybe they navigated here directly. Redirect to booking.
+      router.push("/konsultasi");
+    }
+  }, [router]);
+
+  const handleCopyRequestNumber = () => {
+    if (successData?.requestNumber) {
+      navigator.clipboard.writeText(successData.requestNumber);
+      toast({
+        title: "Tersalin!",
+        description: "Nomor permohonan disalin ke clipboard.",
+      });
+    }
+  };
+
+  if (!successData) return null; // Avoid rendering if no data
+
+  return (
+    <div className="min-h-screen bg-neutral-50 pt-24 pb-20 flex items-center justify-center">
+      <div className="max-w-xl w-full mx-auto px-4">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-neutral-100 animate-fade-enter">
+          {/* Header */}
+          <div className="bg-success/10 py-8 px-6 text-center border-b border-success/20">
+            <div className="mx-auto w-16 h-16 bg-success rounded-full flex items-center justify-center mb-4 shadow-sm">
+              <CheckCircle2 className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-3xl font-display font-bold text-success mb-2">
+              Permohonan Berhasil Dikirim
+            </h1>
+            <p className="text-success/80 font-medium">
+              Terima kasih telah mempercayakan AkuTemanmu.
+            </p>
+          </div>
+
+          {/* Body */}
+          <div className="p-8">
+            <p className="text-center text-neutral-600 mb-8 leading-relaxed">
+              Tim admin kami akan segera meninjau permohonan Anda dan akan menghubungi Anda melalui <strong>WhatsApp</strong> dalam waktu <span className="font-semibold text-neutral-900">1×24 jam</span> untuk konfirmasi selanjutnya.
+            </p>
+
+            {/* Summary Card */}
+            <div className="bg-neutral-50 rounded-xl p-6 border border-neutral-200 mb-8 relative">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-4 text-xs font-semibold tracking-wider text-neutral-500 uppercase rounded-full border border-neutral-200">
+                Detail Permohonan
+              </div>
+              
+              <div className="space-y-4 mt-2">
+                <div>
+                  <p className="text-xs text-neutral-500 uppercase font-semibold mb-1">Nomor Permohonan</p>
+                  <div className="flex items-center justify-between bg-white border border-neutral-200 rounded-lg px-4 py-2">
+                    <span className="font-mono font-bold text-lg text-blue-600">{successData.requestNumber}</span>
+                    <Button variant="ghost" size="icon" onClick={handleCopyRequestNumber} className="h-8 w-8 text-neutral-400 hover:text-blue-600">
+                      <Copy className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <p className="text-[10px] text-neutral-400 mt-1">*Simpan nomor ini untuk keperluan pelacakan status.</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-neutral-200">
+                  <div>
+                    <p className="text-xs text-neutral-500 uppercase font-semibold mb-1 flex items-center gap-1">
+                      <Calendar className="w-3 h-3" /> Tanggal
+                    </p>
+                    <p className="font-medium text-neutral-900">
+                      {format(new Date(successData.date), "dd MMM yyyy", { locale: id })}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-neutral-500 uppercase font-semibold mb-1 flex items-center gap-1">
+                      <Clock className="w-3 h-3" /> Waktu (WIB)
+                    </p>
+                    <p className="font-medium text-neutral-900">
+                      {successData.time}
+                    </p>
+                  </div>
+                  <div className="col-span-2">
+                    <p className="text-xs text-neutral-500 uppercase font-semibold mb-1 flex items-center gap-1">
+                      {successData.method === "Online" ? <Video className="w-3 h-3" /> : <MapPin className="w-3 h-3" />} 
+                      Metode
+                    </p>
+                    <p className="font-medium text-neutral-900">
+                      {successData.method} {successData.method === "Online" ? "(Google Meet)" : "(Kota Serang)"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Action */}
+            <div className="text-center">
+              <Button onClick={() => router.push("/")} className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 py-6 h-auto text-base font-semibold shadow-blue w-full sm:w-auto">
+                Kembali ke Beranda
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

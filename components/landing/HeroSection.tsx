@@ -60,7 +60,7 @@ export default function HeroSection() {
           </p>
 
           <div className="flex flex-wrap gap-3 mb-12">
-            <Link href="#services" className="btn btn-primary btn-large">Mulai Konseling</Link>
+            <Link href="/konsultasi" className="btn btn-primary btn-large">Mulai Konseling</Link>
             <Link href="#how-it-works" className="btn btn-outline btn-large">Pelajari Lebih Lanjut</Link>
           </div>
 

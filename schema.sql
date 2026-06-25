@@ -221,3 +221,52 @@ INSERT INTO posts (title, slug, excerpt, content, category, tag_color, tag_bg, c
   false,
   true
 );
+
+-- ============================================
+-- 5. CONSULTATION REQUESTS TABLE
+-- ============================================
+CREATE TABLE IF NOT EXISTS consultation_requests (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  request_number TEXT UNIQUE NOT NULL,
+  
+  -- Step 1: Data Diri
+  email TEXT NOT NULL,
+  nama_lengkap TEXT NOT NULL,
+  nama_panggilan TEXT NOT NULL,
+  tanggal_lahir DATE NOT NULL,
+  jenis_kelamin TEXT NOT NULL,
+  nik TEXT NOT NULL,
+  nomor_hp TEXT NOT NULL,
+  alamat_lengkap TEXT NOT NULL,
+  provinsi TEXT NOT NULL,
+  
+  -- Step 2: Informasi Konsultasi
+  status TEXT NOT NULL,
+  status_lainnya TEXT,
+  alasan TEXT NOT NULL,
+  alasan_lainnya TEXT,
+  topik_permasalahan TEXT[] NOT NULL,
+  topik_lainnya TEXT,
+  ceritakan_permasalahan TEXT NOT NULL,
+  
+  -- Step 3: Jadwal Konsultasi
+  tanggal_konsultasi DATE NOT NULL,
+  waktu_konsultasi TEXT NOT NULL,
+  metode_konsultasi TEXT NOT NULL,
+  
+  -- Step 4: Informasi Tambahan
+  urutan_konseling TEXT NOT NULL,
+  sumber_informasi TEXT NOT NULL,
+  sumber_informasi_lainnya TEXT,
+  
+  -- System
+  db_status TEXT DEFAULT 'Menunggu Verifikasi',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Real-time Double Booking Index
+CREATE INDEX IF NOT EXISTS idx_consultation_schedule 
+ON consultation_requests(tanggal_konsultasi, waktu_konsultasi) 
+WHERE db_status IN ('Menunggu Verifikasi', 'Disetujui');
+
