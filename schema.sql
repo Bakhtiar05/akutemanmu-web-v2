@@ -268,5 +268,67 @@ CREATE TABLE IF NOT EXISTS consultation_requests (
 -- Real-time Double Booking Index
 CREATE INDEX IF NOT EXISTS idx_consultation_schedule 
 ON consultation_requests(tanggal_konsultasi, waktu_konsultasi) 
-WHERE db_status IN ('Menunggu Verifikasi', 'Disetujui');
+WHERE db_status IN ('Menunggu Verifikasi', 'Disetujui', 'Waiting Payment', 'Waiting Admin Confirmation', 'Processing', 'Completed');
+
+-- ============================================
+-- 6. PAYMENTS TABLE
+-- ============================================
+CREATE TABLE IF NOT EXISTS payments (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  consultation_request_id UUID NOT NULL REFERENCES consultation_requests(id) ON DELETE CASCADE,
+  xendit_invoice_id TEXT NOT NULL UNIQUE,
+  external_id TEXT NOT NULL UNIQUE,
+  payment_method TEXT,
+  amount NUMERIC NOT NULL,
+  currency TEXT NOT NULL DEFAULT 'IDR',
+  payment_status TEXT NOT NULL DEFAULT 'PENDING',
+  invoice_url TEXT NOT NULL,
+  paid_at TIMESTAMPTZ,
+  expired_at TIMESTAMPTZ NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Index for lookup
+CREATE INDEX IF NOT EXISTS idx_payments_consultation_request_id ON payments(consultation_request_id);
+CREATE INDEX IF NOT EXISTS idx_payments_external_id ON payments(external_id);
+
+-- Auto-update updated_at timestamp
+CREATE TRIGGER set_updated_at_payments
+  BEFORE UPDATE ON payments
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================
+-- 7. ROW LEVEL SECURITY (RLS) — PAYMENTS
+-- ============================================
+ALTER TABLE payments ENABLE ROW LEVEL SECURITY;
+
+-- Anyone can create a payment record (when submitting form)
+CREATE POLICY "Public can insert payments"
+  ON payments
+  FOR INSERT
+  WITH CHECK (true);
+
+-- Anyone can read payment records (for checking status)
+CREATE POLICY "Public can read payments"
+  ON payments
+  FOR SELECT
+  USING (true);
+
+-- Anyone can update payments (for webhook to update status)
+CREATE POLICY "Public can update payments"
+  ON payments
+  FOR UPDATE
+  USING (true)
+  WITH CHECK (true);
+
+-- Authenticated admins can manage payments
+CREATE POLICY "Authenticated users can manage payments"
+  ON payments
+  FOR ALL
+  TO authenticated
+  USING (true)
+  WITH CHECK (true);
+
 

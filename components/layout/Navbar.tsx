@@ -29,6 +29,7 @@ export default function Navbar({ variant = 'default' }: NavbarProps) {
         { label: 'Cara Kerja', href: '/#how-it-works' },
         { label: 'Testimoni', href: '/#testimonials' },
         { label: 'FAQ', href: '/#faq' },
+        { label: 'Cek Status', href: '/cek-status' },
         { label: 'Blog', href: '/blog', active: true },
       ]
     : [
@@ -36,6 +37,7 @@ export default function Navbar({ variant = 'default' }: NavbarProps) {
         { label: 'Cara Kerja', href: '#how-it-works' },
         { label: 'Testimoni', href: '#testimonials' },
         { label: 'FAQ', href: '#faq' },
+        { label: 'Cek Status', href: '/cek-status' },
         { label: 'Blog', href: '/blog' },
       ]
 

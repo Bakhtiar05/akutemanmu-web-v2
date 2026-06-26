@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { bookingSchema, BookingFormData } from "@/lib/schemas/booking";
 import { format } from "date-fns";
+import { createXenditInvoice } from "@/lib/services/xendit";
 
 export async function submitBooking(data: BookingFormData) {
   try {
@@ -17,7 +18,7 @@ export async function submitBooking(data: BookingFormData) {
     const randomString = Math.random().toString(36).substring(2, 6).toUpperCase();
     const requestNumber = `ATM-${todayStr}-${randomString}`;
 
-    const { error: insertError } = await supabase
+    const { error: insertError, data: requestData } = await supabase
       .from("consultation_requests")
       .insert({
         request_number: requestNumber,
@@ -47,14 +48,60 @@ export async function submitBooking(data: BookingFormData) {
         urutan_konseling: parsedData.urutan_konseling,
         sumber_informasi: parsedData.sumber_informasi,
         sumber_informasi_lainnya: parsedData.sumber_informasi_lainnya,
-      });
+        db_status: "Waiting Payment",
+      })
+      .select("id")
+      .single();
 
     if (insertError) {
       console.error("Supabase insert error:", insertError);
       throw new Error("Gagal menyimpan permohonan ke database");
     }
 
-    return { success: true, requestNumber };
+    const consultationRequestId = requestData.id;
+
+    // Create Xendit Invoice
+    const priceStr = process.env.NEXT_PUBLIC_CONSULTATION_PRICE || "75000";
+    const amount = parseInt(priceStr, 10);
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    
+    // External ID format INV-{requestNumber}-{timestamp}
+    const externalId = `INV-${requestNumber}-${Date.now()}`;
+    
+    const invoiceReq = {
+      external_id: externalId,
+      amount: amount,
+      description: `Pembayaran Konsultasi ${requestNumber}`,
+      customer: {
+        given_names: parsedData.nama_lengkap,
+        email: parsedData.email,
+        mobile_number: parsedData.nomor_hp,
+      },
+      success_redirect_url: `${appUrl}/booking/success?request_number=${requestNumber}`,
+      failure_redirect_url: `${appUrl}/cek-status`,
+    };
+
+    const invoice = await createXenditInvoice(invoiceReq);
+
+    // Save payment to database
+    const { error: paymentError } = await supabase
+      .from("payments")
+      .insert({
+        consultation_request_id: consultationRequestId,
+        xendit_invoice_id: invoice.id,
+        external_id: externalId,
+        amount: amount,
+        payment_status: "PENDING",
+        invoice_url: invoice.invoice_url,
+        expired_at: invoice.expiry_date,
+      });
+
+    if (paymentError) {
+      console.error("Payment insert error:", paymentError);
+      // We don't block the user, they can retry payment from status check page
+    }
+
+    return { success: true, requestNumber, invoiceUrl: invoice.invoice_url };
   } catch (error) {
     console.error("Booking submission error:", error);
     return { success: false, error: error instanceof Error ? error.message : "Terjadi kesalahan yang tidak terduga" };

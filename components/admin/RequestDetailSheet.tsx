@@ -2,7 +2,7 @@
 
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
-import { Eye, User, Calendar, Info, FileText } from "lucide-react";
+import { Eye, User, Calendar, Info, FileText, CreditCard } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -20,6 +20,8 @@ export default function RequestDetailSheet({ req }: RequestDetailSheetProps) {
   const getProvinceLabel = (val?: string) => {
     return provinces.find((p) => p.value === val)?.label || val;
   };
+
+  const payment = req.payments?.[0];
 
   return (
     <Sheet>
@@ -180,6 +182,53 @@ export default function RequestDetailSheet({ req }: RequestDetailSheetProps) {
               </div>
             </dl>
           </div>
+
+          {/* Payment Info */}
+          {payment && (
+            <div className="bg-white rounded-lg p-5 border border-neutral-100 shadow-sm">
+              <h4 className="font-semibold text-neutral-800 flex items-center gap-2 mb-4 pb-2 border-b border-neutral-100">
+                <CreditCard className="w-4 h-4 text-blue-500" />
+                Informasi Pembayaran
+              </h4>
+              <dl className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <dt className="text-neutral-500 mb-1 text-xs uppercase tracking-wider">Status</dt>
+                  <dd className="font-medium text-neutral-900">{payment.payment_status}</dd>
+                </div>
+                <div>
+                  <dt className="text-neutral-500 mb-1 text-xs uppercase tracking-wider">Nominal</dt>
+                  <dd className="font-medium text-neutral-900">
+                    Rp {parseInt(payment.amount).toLocaleString("id-ID")}
+                  </dd>
+                </div>
+                <div className="col-span-2">
+                  <dt className="text-neutral-500 mb-1 text-xs uppercase tracking-wider">Metode Pembayaran</dt>
+                  <dd className="font-medium text-neutral-900">{payment.payment_method || "-"}</dd>
+                </div>
+                <div className="col-span-2">
+                  <dt className="text-neutral-500 mb-1 text-xs uppercase tracking-wider">Invoice ID / External ID</dt>
+                  <dd className="font-medium text-neutral-900 font-mono text-xs">
+                    {payment.xendit_invoice_id} / {payment.external_id}
+                  </dd>
+                </div>
+                {payment.paid_at && (
+                  <div className="col-span-2">
+                    <dt className="text-neutral-500 mb-1 text-xs uppercase tracking-wider">Tanggal Bayar</dt>
+                    <dd className="font-medium text-neutral-900">
+                      {format(new Date(payment.paid_at), "dd MMMM yyyy HH:mm:ss", { locale: id })}
+                    </dd>
+                  </div>
+                )}
+                {payment.invoice_url && (
+                  <div className="col-span-2 mt-2">
+                    <a href={payment.invoice_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm font-medium">
+                      Buka Link Invoice &rarr;
+                    </a>
+                  </div>
+                )}
+              </dl>
+            </div>
+          )}
         </div>
       </SheetContent>
     </Sheet>

@@ -14,6 +14,16 @@ import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { submitBooking } from "@/app/actions/booking";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
 
 const steps = [
   { id: "step1", title: "Data Diri" },
@@ -27,8 +37,10 @@ export function BookingWizard() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSummaryDialog, setShowSummaryDialog] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
+  const price = parseInt(process.env.NEXT_PUBLIC_CONSULTATION_PRICE || "75000");
 
   const methods = useForm<BookingFormData>({
     resolver: zodResolver(bookingSchema),
@@ -93,10 +105,14 @@ export function BookingWizard() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const onSubmit = async () => {
+  const handleOpenSummary = async () => {
     const isValid = await trigger();
     if (!isValid) return;
+    setShowSummaryDialog(true);
+  };
 
+  const handleFinalSubmit = async () => {
+    setShowSummaryDialog(false);
     setIsSubmitting(true);
     try {
       const data = getValues();
@@ -105,18 +121,22 @@ export function BookingWizard() {
         localStorage.removeItem("booking-draft");
         toast({
           title: "Berhasil",
-          description: "Permohonan Anda berhasil dikirim.",
+          description: "Permohonan Anda berhasil dikirim. Mengalihkan ke pembayaran...",
         });
         
-        // Save success data briefly in sessionStorage to display on success page
-        sessionStorage.setItem("booking-success", JSON.stringify({
-          requestNumber: res.requestNumber,
-          date: data.tanggal_konsultasi,
-          time: data.waktu_konsultasi,
-          method: data.metode_konsultasi
-        }));
-
-        router.push("/booking/success");
+        // Redirect to Xendit Invoice if available
+        if (res.invoiceUrl) {
+          window.location.href = res.invoiceUrl;
+        } else {
+          // Fallback if no invoice was generated (should not happen typically)
+          sessionStorage.setItem("booking-success", JSON.stringify({
+            requestNumber: res.requestNumber,
+            date: data.tanggal_konsultasi,
+            time: data.waktu_konsultasi,
+            method: data.metode_konsultasi
+          }));
+          router.push("/booking/success");
+        }
       } else {
         throw new Error(res.error || "Gagal menyimpan data");
       }
@@ -198,7 +218,7 @@ export function BookingWizard() {
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         ) : (
-          <Button onClick={onSubmit} disabled={isSubmitting} className="bg-success hover:bg-success/90 rounded-full px-8 shadow-md text-white">
+          <Button onClick={handleOpenSummary} disabled={isSubmitting} className="bg-success hover:bg-success/90 rounded-full px-8 shadow-md text-white">
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -210,6 +230,55 @@ export function BookingWizard() {
           </Button>
         )}
       </div>
+
+      <Dialog open={showSummaryDialog} onOpenChange={setShowSummaryDialog}>
+        <DialogContent className="sm:max-w-md bg-white">
+          <DialogHeader>
+            <DialogTitle className="text-slate-900 font-sans">Ringkasan Permohonan & Tagihan</DialogTitle>
+            <DialogDescription className="font-sans">
+              Mohon periksa kembali detail permohonan Anda.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-3 my-4 font-sans">
+            <div className="flex justify-between items-start border-b border-neutral-200 pb-2">
+              <span className="text-sm text-neutral-500">Nama Lengkap</span>
+              <span className="text-sm font-medium text-slate-900 text-right">{formValues.nama_lengkap}</span>
+            </div>
+            <div className="flex justify-between items-start border-b border-neutral-200 pb-2">
+              <span className="text-sm text-neutral-500">Metode</span>
+              <span className="text-sm font-medium text-slate-900 text-right">{formValues.metode_konsultasi}</span>
+            </div>
+            <div className="flex justify-between items-start border-b border-neutral-200 pb-2">
+              <span className="text-sm text-neutral-500">Jadwal</span>
+              <span className="text-sm font-medium text-slate-900 text-right">
+                {formValues.tanggal_konsultasi ? format(new Date(formValues.tanggal_konsultasi), "dd MMMM yyyy", { locale: id }) : ""}
+                <br />
+                {formValues.waktu_konsultasi} WIB
+              </span>
+            </div>
+            <div className="flex justify-between items-start pt-1">
+              <span className="text-sm font-semibold text-neutral-700">Total Tagihan</span>
+              <span className="text-base font-bold text-blue-600">
+                Rp {price.toLocaleString("id-ID")}
+              </span>
+            </div>
+          </div>
+
+          <p className="text-xs text-neutral-500 leading-relaxed font-sans">
+            Dengan melanjutkan, Anda akan diarahkan ke halaman pembayaran Xendit. Permohonan Anda akan diproses setelah pembayaran berhasil.
+          </p>
+
+          <DialogFooter className="flex-col sm:flex-row gap-2 sm:gap-0 mt-4 font-sans">
+            <Button variant="outline" onClick={() => setShowSummaryDialog(false)} className="w-full sm:w-auto">
+              Batal
+            </Button>
+            <Button onClick={handleFinalSubmit} className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto">
+              Lanjut ke Pembayaran
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

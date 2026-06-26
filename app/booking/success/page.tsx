@@ -1,35 +1,49 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
-import { CheckCircle2, ArrowRight, Calendar, Clock, Video, MapPin, Copy } from "lucide-react";
+import { CheckCircle2, ArrowRight, Calendar, Clock, Video, MapPin, Copy, CreditCard, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { getPaymentAndBookingDetails } from "@/app/actions/payment";
 
-export default function BookingSuccessPage() {
+function SuccessPageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
-  const [successData, setSuccessData] = useState<{
-    requestNumber: string;
-    date: string;
-    time: string;
-    method: string;
-  } | null>(null);
+  
+  const [loading, setLoading] = useState(true);
+  const [successData, setSuccessData] = useState<any>(null);
 
   useEffect(() => {
-    // Retrieve success data from session storage (set during successful form submission)
-    const data = sessionStorage.getItem("booking-success");
-    if (data) {
-      setSuccessData(JSON.parse(data));
-      // Optional: Clear it so refreshing the page doesn't keep showing it forever
-      // sessionStorage.removeItem("booking-success");
-    } else {
-      // If no data, maybe they navigated here directly. Redirect to booking.
-      router.push("/konsultasi");
+    async function fetchData() {
+      const requestNumber = searchParams.get("request_number");
+      
+      if (requestNumber) {
+        // Fetch from server
+        const res = await getPaymentAndBookingDetails(requestNumber);
+        if (res.success && res.data) {
+          setSuccessData(res.data);
+        } else {
+          toast({ variant: "destructive", title: "Error", description: res.error });
+        }
+        setLoading(false);
+      } else {
+        // Try fallback to sessionStorage for edge cases where URL doesn't have it
+        const sessionData = sessionStorage.getItem("booking-success");
+        if (sessionData) {
+          setSuccessData(JSON.parse(sessionData));
+        } else {
+          router.push("/konsultasi");
+        }
+        setLoading(false);
+      }
     }
-  }, [router]);
+
+    fetchData();
+  }, [searchParams, router, toast]);
 
   const handleCopyRequestNumber = () => {
     if (successData?.requestNumber) {
@@ -41,21 +55,35 @@ export default function BookingSuccessPage() {
     }
   };
 
-  if (!successData) return null; // Avoid rendering if no data
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-neutral-50 pt-24 pb-20 flex items-center justify-center">
+        <div className="flex flex-col items-center">
+          <Loader2 className="w-8 h-8 text-blue-600 animate-spin mb-4" />
+          <p className="text-neutral-500 font-medium">Memuat data permohonan...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!successData) return null;
+
+  const isPaid = successData.paymentStatus === "PAID";
+  const isPending = successData.paymentStatus === "PENDING";
 
   return (
     <div className="min-h-screen bg-neutral-50 pt-24 pb-20 flex items-center justify-center">
       <div className="max-w-xl w-full mx-auto px-4">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-neutral-100 animate-fade-enter">
           {/* Header */}
-          <div className="bg-success/10 py-8 px-6 text-center border-b border-success/20">
-            <div className="mx-auto w-16 h-16 bg-success rounded-full flex items-center justify-center mb-4 shadow-sm">
+          <div className={`py-8 px-6 text-center border-b ${isPending ? 'bg-amber-50 border-amber-100' : 'bg-success/10 border-success/20'}`}>
+            <div className={`mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 shadow-sm ${isPending ? 'bg-amber-500' : 'bg-success'}`}>
               <CheckCircle2 className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-display font-bold text-success mb-2">
-              Permohonan Berhasil Dikirim
+            <h1 className={`text-3xl font-display font-bold mb-2 ${isPending ? 'text-amber-600' : 'text-success'}`}>
+              {isPending ? 'Menunggu Pembayaran' : 'Pembayaran Berhasil'}
             </h1>
-            <p className="text-success/80 font-medium">
+            <p className={`font-medium ${isPending ? 'text-amber-700/80' : 'text-success/80'}`}>
               Terima kasih telah mempercayakan AkuTemanmu.
             </p>
           </div>
@@ -63,7 +91,11 @@ export default function BookingSuccessPage() {
           {/* Body */}
           <div className="p-8">
             <p className="text-center text-neutral-600 mb-8 leading-relaxed">
-              Tim admin kami akan segera meninjau permohonan Anda dan akan menghubungi Anda melalui <strong>WhatsApp</strong> dalam waktu <span className="font-semibold text-neutral-900">1×24 jam</span> untuk konfirmasi selanjutnya.
+              {isPending ? (
+                "Silakan selesaikan pembayaran Anda agar permohonan dapat diproses."
+              ) : (
+                <>Tim admin kami akan segera meninjau permohonan Anda dan menghubungi via <strong>WhatsApp</strong> dalam waktu <span className="font-semibold text-neutral-900">1×24 jam</span> untuk konfirmasi sesi konsultasi Anda.</>
+              )}
             </p>
 
             {/* Summary Card */}
@@ -81,7 +113,7 @@ export default function BookingSuccessPage() {
                       <Copy className="h-4 w-4" />
                     </Button>
                   </div>
-                  <p className="text-[10px] text-neutral-400 mt-1">*Simpan nomor ini untuk keperluan pelacakan status.</p>
+                  <p className="text-[10px] text-neutral-400 mt-1">*Simpan nomor ini untuk keperluan pelacakan status di halaman Cek Status.</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 pt-4 border-t border-neutral-200">
@@ -110,20 +142,51 @@ export default function BookingSuccessPage() {
                       {successData.method} {successData.method === "Online" ? "(Google Meet)" : "(Kota Serang)"}
                     </p>
                   </div>
+                  
+                  {isPaid && (
+                    <div className="col-span-2 pt-2 border-t border-neutral-100 mt-2">
+                      <p className="text-xs text-neutral-500 uppercase font-semibold mb-1 flex items-center gap-1">
+                        <CreditCard className="w-3 h-3" /> Metode Pembayaran
+                      </p>
+                      <p className="font-medium text-neutral-900">
+                        {successData.paymentMethod || "Telah Dibayar"}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
 
-            {/* Action */}
-            <div className="text-center">
-              <Button onClick={() => router.push("/")} className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 py-6 h-auto text-base font-semibold shadow-blue w-full sm:w-auto">
+            {/* Actions */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              {isPending && successData.invoiceUrl && (
+                <Button onClick={() => window.location.href = successData.invoiceUrl} className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 py-6 h-auto text-base font-semibold shadow-blue w-full sm:w-auto">
+                  Lanjutkan Pembayaran
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              )}
+              <Button onClick={() => router.push("/")} variant={isPending ? "outline" : "default"} className={`${!isPending && "bg-blue-600 hover:bg-blue-700 text-white"} rounded-full px-8 py-6 h-auto text-base font-semibold shadow-sm w-full sm:w-auto`}>
                 Kembali ke Beranda
-                <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </div>
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function BookingSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-neutral-50 pt-24 pb-20 flex items-center justify-center">
+        <div className="flex flex-col items-center">
+          <Loader2 className="w-8 h-8 text-blue-600 animate-spin mb-4" />
+          <p className="text-neutral-500 font-medium">Memuat...</p>
+        </div>
+      </div>
+    }>
+      <SuccessPageContent />
+    </Suspense>
   );
 }

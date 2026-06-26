@@ -21,7 +21,7 @@ export default async function AdminKonselingDashboard() {
 
   const { data: requests, error } = await supabase
     .from("consultation_requests")
-    .select("*")
+    .select("*, payments(*)")
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -63,8 +63,27 @@ export default async function AdminKonselingDashboard() {
   const getWhatsAppLink = (req: any) => {
     const waNumber = formatWhatsAppNumber(req.nomor_hp);
     const dateFormatted = req.tanggal_konsultasi ? format(new Date(req.tanggal_konsultasi), "dd MMMM yyyy", { locale: id }) : "-";
-    const text = `Halo ${req.nama_panggilan || req.nama_lengkap}, kami dari tim admin AkuTemanmu. Permohonan konseling Anda dengan nomor resi ${req.request_number} untuk tanggal ${dateFormatted} telah kami terima dan saat ini berstatus ${req.db_status || "Menunggu Verifikasi"}.`;
+    const text = `Halo ${req.nama_panggilan || req.nama_lengkap}, kami dari tim admin AkuTemanmu.
+Berikut adalah detail permohonan konseling Anda:
+Nomor Permohonan: ${req.request_number}
+Tanggal: ${dateFormatted}
+Waktu: ${req.waktu_konsultasi} WIB
+Metode: ${req.metode_konsultasi}`;
     return `https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`;
+  };
+
+  const getPaymentBadge = (payment: any) => {
+    if (!payment) return <Badge variant="outline" className="bg-neutral-50 text-neutral-500">-</Badge>;
+    switch (payment.payment_status) {
+      case "PAID":
+        return <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200">Lunas</Badge>;
+      case "PENDING":
+        return <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">Belum Bayar</Badge>;
+      case "EXPIRED":
+        return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">Kedaluwarsa</Badge>;
+      default:
+        return <Badge variant="outline" className="bg-neutral-50 text-neutral-700 border-neutral-200">{payment.payment_status}</Badge>;
+    }
   };
 
   return (
@@ -85,8 +104,8 @@ export default async function AdminKonselingDashboard() {
                 <TableHead className="font-semibold text-neutral-600">Nama</TableHead>
                 <TableHead className="font-semibold text-neutral-600">Jadwal</TableHead>
                 <TableHead className="font-semibold text-neutral-600">Metode</TableHead>
-                <TableHead className="font-semibold text-neutral-600">Dibuat Pada</TableHead>
                 <TableHead className="font-semibold text-neutral-600">Status</TableHead>
+                <TableHead className="font-semibold text-neutral-600">Pembayaran</TableHead>
                 <TableHead className="font-semibold text-neutral-600 text-right">Aksi</TableHead>
               </TableRow>
             </TableHeader>
@@ -116,11 +135,11 @@ export default async function AdminKonselingDashboard() {
                     <TableCell>
                       <span className="text-sm text-neutral-700">{req.metode_konsultasi}</span>
                     </TableCell>
-                    <TableCell className="text-sm text-neutral-500">
-                      {req.created_at ? format(new Date(req.created_at), "dd MMM yyyy HH:mm", { locale: id }) : "-"}
-                    </TableCell>
                     <TableCell>
                       {getStatusBadge(req.db_status)}
+                    </TableCell>
+                    <TableCell>
+                      {getPaymentBadge(req.payments?.[0])}
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end items-center gap-2">
