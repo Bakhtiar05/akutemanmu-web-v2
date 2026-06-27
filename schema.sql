@@ -276,13 +276,14 @@ WHERE db_status IN ('Menunggu Verifikasi', 'Disetujui', 'Waiting Payment', 'Wait
 CREATE TABLE IF NOT EXISTS payments (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   consultation_request_id UUID NOT NULL REFERENCES consultation_requests(id) ON DELETE CASCADE,
-  xendit_invoice_id TEXT NOT NULL UNIQUE,
-  external_id TEXT NOT NULL UNIQUE,
+  provider_transaction_id TEXT NOT NULL UNIQUE,
+  provider_reference TEXT NOT NULL UNIQUE,
+  payment_provider TEXT DEFAULT 'duitku',
   payment_method TEXT,
   amount NUMERIC NOT NULL,
   currency TEXT NOT NULL DEFAULT 'IDR',
   payment_status TEXT NOT NULL DEFAULT 'PENDING',
-  invoice_url TEXT NOT NULL,
+  payment_url TEXT NOT NULL,
   paid_at TIMESTAMPTZ,
   expired_at TIMESTAMPTZ NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -291,7 +292,7 @@ CREATE TABLE IF NOT EXISTS payments (
 
 -- Index for lookup
 CREATE INDEX IF NOT EXISTS idx_payments_consultation_request_id ON payments(consultation_request_id);
-CREATE INDEX IF NOT EXISTS idx_payments_external_id ON payments(external_id);
+CREATE INDEX IF NOT EXISTS idx_payments_provider_reference ON payments(provider_reference);
 
 -- Auto-update updated_at timestamp
 CREATE TRIGGER set_updated_at_payments
