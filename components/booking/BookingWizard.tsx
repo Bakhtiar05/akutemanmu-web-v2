@@ -10,7 +10,7 @@ import { Step3JadwalKonsultasi } from "./Step3JadwalKonsultasi";
 import { Step4InformasiTambahan } from "./Step4InformasiTambahan";
 import { Step5Review } from "./Step5Review";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2, Check } from "lucide-react";
 import { submitBooking } from "@/app/actions/booking";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
@@ -144,40 +144,50 @@ export function BookingWizard() {
   if (!isMounted) return null; // Prevent hydration mismatch
 
   return (
-    <div className="max-w-3xl mx-auto w-full bg-white rounded-xl shadow-md p-6 md:p-10 border border-neutral-100">
+    <div className="max-w-[900px] mx-auto w-full bg-white rounded-[20px] shadow-md booking-card p-6 md:p-12 border border-[#E2E8F0]">
       {/* Progress Indicator */}
-      <div className="mb-10">
-        <div className="flex justify-between items-center mb-2">
+      <div className="mb-12">
+        <div className="flex justify-between items-start relative">
+          {/* Progress line (behind circles) */}
+          <div className="absolute top-[22px] left-[44px] right-[44px] h-[3px] bg-[#E2E8F0] rounded-full z-0">
+            <div
+              className="absolute top-0 left-0 h-full bg-[#2563EB] rounded-full transition-all duration-500 ease-out"
+              style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
+            />
+          </div>
+
           {steps.map((step, idx) => (
-            <div key={step.id} className="flex flex-col items-center relative z-10 w-full">
+            <div key={step.id} className="flex flex-col items-center relative z-10" style={{ width: `${100 / steps.length}%` }}>
               <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-colors duration-300 ${
-                  idx <= currentStep
-                    ? "bg-blue-500 text-white shadow-blue"
-                    : "bg-neutral-100 text-neutral-400"
+                className={`step-circle w-11 h-11 rounded-full flex items-center justify-center font-bold text-sm ${
+                  idx < currentStep
+                    ? "bg-[#2563EB] text-white shadow-md"
+                    : idx === currentStep
+                    ? "bg-white text-[#2563EB] border-2 border-[#2563EB] shadow-[0_0_0_4px_rgba(37,99,235,0.12)]"
+                    : "bg-[#F1F5F9] text-[#94A3B8] border border-[#E2E8F0]"
                 }`}
               >
-                {idx + 1}
+                {idx < currentStep ? (
+                  <Check className="w-5 h-5" />
+                ) : (
+                  idx + 1
+                )}
               </div>
-              <span className={`text-xs mt-2 hidden md:block font-medium ${idx <= currentStep ? "text-blue-600" : "text-neutral-400"}`}>
+              <span className={`text-xs mt-3 hidden md:block font-semibold tracking-wide ${
+                idx < currentStep ? "text-[#2563EB]" : idx === currentStep ? "text-[#2563EB]" : "text-[#94A3B8]"
+              }`}>
                 {step.title}
               </span>
             </div>
           ))}
         </div>
-        <div className="relative w-full h-1 bg-neutral-100 rounded-full -mt-12 md:-mt-16 z-0 overflow-hidden">
-          <div
-            className="absolute top-0 left-0 h-full bg-blue-500 transition-all duration-500 ease-out"
-            style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
-          />
-        </div>
       </div>
 
-      <div className="mb-8">
-        <h2 className="text-2xl md:text-3xl font-display font-bold text-neutral-900 mb-2">
+      <div className="mb-10">
+        <h2 className="text-2xl md:text-[30px] font-display font-bold text-[#0F172A] mb-2 leading-tight">
           {steps[currentStep].title}
         </h2>
-        <p className="text-neutral-500">
+        <p className="text-[#64748B] text-[15px]">
           Silakan lengkapi informasi di bawah ini dengan benar.
         </p>
       </div>
@@ -193,9 +203,9 @@ export function BookingWizard() {
       </FormProvider>
 
       {/* Navigation Buttons */}
-      <div className="flex justify-between mt-12 pt-6 border-t border-neutral-100">
+      <div className="flex justify-between mt-14 pt-8 border-t border-[#E2E8F0]">
         {currentStep > 0 ? (
-          <Button variant="outline" onClick={handleBack} className="rounded-full px-6 text-neutral-600">
+          <Button variant="outline" onClick={handleBack} className="rounded-xl px-6 h-[52px] text-[#64748B] border-[#E2E8F0] hover:bg-[#F8FAFC] hover:text-[#0F172A] hover:border-[#CBD5E1] transition-all duration-200">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Kembali
           </Button>
@@ -204,12 +214,12 @@ export function BookingWizard() {
         )}
 
         {currentStep < steps.length - 1 ? (
-          <Button onClick={handleNext} className="bg-blue-600 hover:bg-blue-700 rounded-full px-8 shadow-blue text-white">
+          <Button onClick={handleNext} className="booking-btn-primary rounded-xl px-8 h-[52px] text-white font-semibold shadow-md">
             Selanjutnya
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         ) : (
-          <Button onClick={handleOpenSummary} disabled={isSubmitting} className="bg-success hover:bg-success/90 rounded-full px-8 shadow-md text-white">
+          <Button onClick={handleOpenSummary} disabled={isSubmitting} className="bg-[#22C55E] hover:bg-[#16A34A] rounded-xl px-8 h-[52px] shadow-md text-white font-semibold transition-all duration-200">
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -223,44 +233,44 @@ export function BookingWizard() {
       </div>
 
       <Dialog open={showSummaryDialog} onOpenChange={setShowSummaryDialog}>
-        <DialogContent className="sm:max-w-md bg-white">
+        <DialogContent className="sm:max-w-md bg-white rounded-2xl border-[#E2E8F0]">
           <DialogHeader>
-            <DialogTitle className="text-slate-900 font-sans">Ringkasan Permohonan & Tagihan</DialogTitle>
-            <DialogDescription className="font-sans">
+            <DialogTitle className="text-[#0F172A] font-sans text-xl">Ringkasan Permohonan & Tagihan</DialogTitle>
+            <DialogDescription className="font-sans text-[#64748B]">
               Mohon periksa kembali detail permohonan Anda.
             </DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-3 my-4 font-sans">
-            <div className="flex justify-between items-start border-b border-neutral-200 pb-2">
-              <span className="text-sm text-neutral-500">Nama Lengkap</span>
-              <span className="text-sm font-medium text-slate-900 text-right">{formValues.nama_lengkap}</span>
+          <div className="space-y-3.5 my-5 font-sans">
+            <div className="flex justify-between items-start border-b border-[#E2E8F0] pb-3">
+              <span className="text-sm text-[#64748B]">Nama Lengkap</span>
+              <span className="text-sm font-medium text-[#0F172A] text-right">{formValues.nama_lengkap}</span>
             </div>
-            <div className="flex justify-between items-start border-b border-neutral-200 pb-2">
-              <span className="text-sm text-neutral-500">Metode</span>
-              <span className="text-sm font-medium text-slate-900 text-right">{formValues.metode_konsultasi}</span>
+            <div className="flex justify-between items-start border-b border-[#E2E8F0] pb-3">
+              <span className="text-sm text-[#64748B]">Metode</span>
+              <span className="text-sm font-medium text-[#0F172A] text-right">{formValues.metode_konsultasi}</span>
             </div>
-            <div className="flex justify-between items-start border-b border-neutral-200 pb-2">
-              <span className="text-sm text-neutral-500">Jadwal</span>
-              <span className="text-sm font-medium text-slate-900 text-right">
+            <div className="flex justify-between items-start border-b border-[#E2E8F0] pb-3">
+              <span className="text-sm text-[#64748B]">Jadwal</span>
+              <span className="text-sm font-medium text-[#0F172A] text-right">
                 {formValues.tanggal_konsultasi ? format(new Date(formValues.tanggal_konsultasi), "dd MMMM yyyy", { locale: id }) : ""}
                 <br />
                 {formValues.waktu_konsultasi} WIB
               </span>
             </div>
             <div className="flex justify-between items-start pt-1">
-              <span className="text-sm font-semibold text-neutral-700">Total Tagihan</span>
-              <span className="text-base font-bold text-blue-600">
+              <span className="text-sm font-semibold text-[#334155]">Total Tagihan</span>
+              <span className="text-lg font-bold text-[#2563EB]">
                 Rp {price.toLocaleString("id-ID")}
               </span>
             </div>
           </div>
 
-          <p className="text-xs text-neutral-500 leading-relaxed font-sans">
+          <p className="text-xs text-[#94A3B8] leading-relaxed font-sans">
             Dengan melanjutkan, Anda akan diarahkan ke halaman pembayaran Xendit. Permohonan Anda akan diproses setelah pembayaran berhasil.
           </p>
 
-          <DialogFooter className="flex-col sm:flex-row gap-2 sm:gap-0 mt-4 font-sans">
+          <DialogFooter className="flex-col sm:flex-row gap-2 sm:gap-0 mt-5 font-sans">
             <Button 
               variant="outline" 
               onClick={() => {
@@ -271,11 +281,11 @@ export function BookingWizard() {
                 }
               }} 
               disabled={isSubmitting && !submittedRequestNumber}
-              className="w-full sm:w-auto"
+              className="w-full sm:w-auto rounded-xl h-11 border-[#E2E8F0] hover:bg-[#F8FAFC]"
             >
               {submittedRequestNumber ? "Ke Halaman Status" : "Batal"}
             </Button>
-            <Button onClick={handleFinalSubmit} disabled={isSubmitting} className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto">
+            <Button onClick={handleFinalSubmit} disabled={isSubmitting} className="booking-btn-primary text-white w-full sm:w-auto rounded-xl h-11 font-semibold">
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />

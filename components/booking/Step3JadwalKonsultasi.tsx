@@ -70,7 +70,7 @@ export function Step3JadwalKonsultasi() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
         {/* Calendar Selection */}
@@ -81,7 +81,7 @@ export function Step3JadwalKonsultasi() {
             <FormItem className="flex flex-col">
               <FormLabel>Tanggal Konsultasi *</FormLabel>
               <FormDescription>Pilih hari antara Selasa - Jumat.</FormDescription>
-              <div className="rounded-md border bg-white p-3 inline-block shadow-sm w-fit">
+              <div className="rounded-xl border border-[#E2E8F0] bg-white p-4 inline-block shadow-sm w-fit">
                 <Calendar
                   mode="single"
                   selected={field.value}
@@ -104,11 +104,11 @@ export function Step3JadwalKonsultasi() {
               <FormLabel>Waktu Konsultasi *</FormLabel>
               <FormDescription>Zona waktu WIB (GMT+7)</FormDescription>
               {!selectedDate ? (
-                <div className="flex h-[200px] items-center justify-center rounded-md border border-dashed border-neutral-300 bg-neutral-50 p-4 text-center text-sm text-neutral-500">
+                <div className="flex h-[200px] items-center justify-center rounded-xl border border-dashed border-[#CBD5E1] bg-[#F8FAFC] p-6 text-center text-[15px] text-[#64748B]">
                   Pilih tanggal terlebih dahulu untuk melihat ketersediaan waktu.
                 </div>
               ) : isLoadingSlots ? (
-                <div className="flex h-[200px] flex-col items-center justify-center rounded-md border border-neutral-200 bg-neutral-50 p-4 text-center">
+                <div className="flex h-[200px] flex-col items-center justify-center rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-6 text-center">
                   <Loader2 className="h-6 w-6 animate-spin text-blue-500 mb-2" />
                   <p className="text-sm text-neutral-500">Memeriksa ketersediaan jadwal...</p>
                 </div>
@@ -117,7 +117,7 @@ export function Step3JadwalKonsultasi() {
                   <RadioGroup
                     onValueChange={field.onChange}
                     value={field.value}
-                    className="grid grid-cols-2 gap-3"
+                    className="grid grid-cols-2 gap-4"
                   >
                     {TIME_SLOTS.map((time) => {
                       const isBooked = bookedSlots.includes(time);
@@ -127,10 +127,10 @@ export function Step3JadwalKonsultasi() {
                             <RadioGroupItem value={time} className="peer sr-only" disabled={isBooked} />
                           </FormControl>
                           <FormLabel
-                            className={`flex flex-col items-center justify-center rounded-md border-2 p-3 text-sm font-medium transition-colors
+                            className={`flex flex-col items-center justify-center rounded-xl border-2 p-4 text-sm font-medium transition-all duration-200
                               ${isBooked 
-                                ? "border-muted bg-neutral-100 text-neutral-400 cursor-not-allowed opacity-60" 
-                                : "border-muted bg-popover hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-blue-500 peer-data-[state=checked]:bg-blue-50 peer-data-[state=checked]:text-blue-700 cursor-pointer"
+                                ? "border-[#E2E8F0] bg-[#F1F5F9] text-[#94A3B8] cursor-not-allowed opacity-60" 
+                                : "border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] hover:border-[#CBD5E1] peer-data-[state=checked]:border-[#2563EB] peer-data-[state=checked]:bg-[#EFF6FF] peer-data-[state=checked]:text-[#1D4ED8] cursor-pointer"
                               }
                             `}
                           >
@@ -153,7 +153,7 @@ export function Step3JadwalKonsultasi() {
         control={control}
         name="metode_konsultasi"
         render={({ field }) => (
-          <FormItem className="space-y-3 pt-4 border-t border-neutral-100">
+          <FormItem className="space-y-3 pt-8 border-t border-[#E2E8F0]">
             <FormLabel>Metode Konsultasi *</FormLabel>
             <FormControl>
               <RadioGroup
@@ -165,7 +165,7 @@ export function Step3JadwalKonsultasi() {
                   <FormControl>
                     <RadioGroupItem value="Online" className="peer sr-only" />
                   </FormControl>
-                  <FormLabel className="flex flex-col rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-blue-500 peer-data-[state=checked]:bg-blue-50 cursor-pointer">
+                  <FormLabel className="flex flex-col rounded-xl border-2 border-[#E2E8F0] bg-white p-5 hover:bg-[#F8FAFC] hover:border-[#CBD5E1] peer-data-[state=checked]:border-[#2563EB] peer-data-[state=checked]:bg-[#EFF6FF] cursor-pointer transition-all duration-200">
                     <span className="font-semibold text-base mb-1">Online</span>
                     <span className="text-sm font-normal text-neutral-500">Google Meet</span>
                   </FormLabel>
@@ -174,7 +174,7 @@ export function Step3JadwalKonsultasi() {
                   <FormControl>
                     <RadioGroupItem value="Offline" className="peer sr-only" />
                   </FormControl>
-                  <FormLabel className="flex flex-col rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-blue-500 peer-data-[state=checked]:bg-blue-50 cursor-pointer">
+                  <FormLabel className="flex flex-col rounded-xl border-2 border-[#E2E8F0] bg-white p-5 hover:bg-[#F8FAFC] hover:border-[#CBD5E1] peer-data-[state=checked]:border-[#2563EB] peer-data-[state=checked]:bg-[#EFF6FF] cursor-pointer transition-all duration-200">
                     <span className="font-semibold text-base mb-1">Offline</span>
                     <span className="text-sm font-normal text-neutral-500">Hanya tersedia di Kota Serang, Banten</span>
                   </FormLabel>

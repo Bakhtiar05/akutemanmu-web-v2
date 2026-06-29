@@ -9,7 +9,7 @@ export function Step4InformasiTambahan() {
   const sumberInformasi = useWatch({ control, name: "sumber_informasi" });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {/* Urutan Konseling */}
       <FormField
         control={control}
@@ -21,7 +21,7 @@ export function Step4InformasiTambahan() {
               <RadioGroup
                 onValueChange={field.onChange}
                 defaultValue={field.value}
-                className="grid grid-cols-2 md:grid-cols-5 gap-3"
+                className="grid grid-cols-2 md:grid-cols-5 gap-4"
               >
                 {["Pertama", "Kedua", "Ketiga", "Keempat", "Lebih dari Empat"].map((item) => (
                   <FormItem key={item}>
@@ -29,7 +29,7 @@ export function Step4InformasiTambahan() {
                       <RadioGroupItem value={item} className="peer sr-only" />
                     </FormControl>
                     <FormLabel
-                      className="flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-3 text-sm hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-blue-500 peer-data-[state=checked]:bg-blue-50 cursor-pointer text-center h-full"
+                      className="flex flex-col items-center justify-center rounded-xl border-2 border-[#E2E8F0] bg-white p-4 text-sm hover:bg-[#F8FAFC] hover:border-[#CBD5E1] peer-data-[state=checked]:border-[#2563EB] peer-data-[state=checked]:bg-[#EFF6FF] cursor-pointer text-center h-full transition-all duration-200 font-medium"
                     >
                       {item}
                     </FormLabel>
@@ -53,7 +53,7 @@ export function Step4InformasiTambahan() {
               <RadioGroup
                 onValueChange={field.onChange}
                 defaultValue={field.value}
-                className="grid grid-cols-2 md:grid-cols-5 gap-3"
+                className="grid grid-cols-2 md:grid-cols-5 gap-4"
               >
                 {["WhatsApp", "Instagram", "Campaign", "Teman", "Lainnya"].map((item) => (
                   <FormItem key={item}>
@@ -61,7 +61,7 @@ export function Step4InformasiTambahan() {
                       <RadioGroupItem value={item} className="peer sr-only" />
                     </FormControl>
                     <FormLabel
-                      className="flex flex-col items-center justify-center rounded-md border-2 border-muted bg-popover p-3 text-sm hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-blue-500 peer-data-[state=checked]:bg-blue-50 cursor-pointer text-center h-full"
+                      className="flex flex-col items-center justify-center rounded-xl border-2 border-[#E2E8F0] bg-white p-4 text-sm hover:bg-[#F8FAFC] hover:border-[#CBD5E1] peer-data-[state=checked]:border-[#2563EB] peer-data-[state=checked]:bg-[#EFF6FF] cursor-pointer text-center h-full transition-all duration-200 font-medium"
                     >
                       {item}
                     </FormLabel>

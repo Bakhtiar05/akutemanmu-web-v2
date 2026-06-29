@@ -21,7 +21,7 @@ export function Step2InformasiKonsultasi() {
   const ceritakan = useWatch({ control, name: "ceritakan_permasalahan" }) || "";
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {/* Status */}
       <FormField
         control={control}
@@ -41,7 +41,7 @@ export function Step2InformasiKonsultasi() {
                       <RadioGroupItem value={item} className="peer sr-only" />
                     </FormControl>
                     <FormLabel
-                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-blue-500 peer-data-[state=checked]:bg-blue-50 cursor-pointer"
+                      className="flex flex-col items-center justify-between rounded-xl border-2 border-[#E2E8F0] bg-white p-5 hover:bg-[#F8FAFC] hover:border-[#CBD5E1] peer-data-[state=checked]:border-[#2563EB] peer-data-[state=checked]:bg-[#EFF6FF] cursor-pointer transition-all duration-200"
                     >
                       {item}
                     </FormLabel>
@@ -84,7 +84,7 @@ export function Step2InformasiKonsultasi() {
                       <RadioGroupItem value={item} className="peer sr-only" />
                     </FormControl>
                     <FormLabel
-                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-blue-500 peer-data-[state=checked]:bg-blue-50 cursor-pointer text-center"
+                      className="flex flex-col items-center justify-between rounded-xl border-2 border-[#E2E8F0] bg-white p-5 hover:bg-[#F8FAFC] hover:border-[#CBD5E1] peer-data-[state=checked]:border-[#2563EB] peer-data-[state=checked]:bg-[#EFF6FF] cursor-pointer text-center transition-all duration-200"
                     >
                       {item}
                     </FormLabel>
@@ -115,7 +115,7 @@ export function Step2InformasiKonsultasi() {
         render={() => (
           <FormItem>
             <div className="mb-4">
-              <FormLabel className="text-base">Topik Permasalahan Secara Umum *</FormLabel>
+              <FormLabel className="text-base font-semibold">Topik Permasalahan Secara Umum *</FormLabel>
               <FormDescription>Boleh pilih lebih dari satu.</FormDescription>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -128,7 +128,7 @@ export function Step2InformasiKonsultasi() {
                     return (
                       <FormItem
                         key={item}
-                        className="flex flex-row items-start space-x-3 space-y-0"
+                        className="flex flex-row items-start gap-3 space-y-0"
                       >
                         <FormControl>
                           <Checkbox
@@ -144,7 +144,7 @@ export function Step2InformasiKonsultasi() {
                             }}
                           />
                         </FormControl>
-                        <FormLabel className="font-normal text-sm cursor-pointer">
+                        <FormLabel className="font-normal text-[15px] cursor-pointer text-[#334155]">
                           {item}
                         </FormLabel>
                       </FormItem>

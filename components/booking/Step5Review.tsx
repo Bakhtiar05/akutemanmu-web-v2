@@ -14,105 +14,105 @@ export function Step5Review() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6">
-        <h3 className="text-blue-800 font-semibold flex items-center gap-2 mb-1">
+    <div className="space-y-8">
+      <div className="bg-gradient-to-r from-[#EFF6FF] to-[#F0F4FF] border border-[#BFDBFE] rounded-2xl p-5 mb-6">
+        <h3 className="text-[#1E40AF] font-semibold flex items-center gap-2.5 mb-1.5 text-[15px]">
           <Info className="w-5 h-5" />
           Review Permohonan
         </h3>
-        <p className="text-sm text-blue-600">
+        <p className="text-sm text-[#3B82F6]">
           Silakan periksa kembali data yang telah Anda masukkan sebelum mengirim permohonan.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Data Diri */}
-        <div className="bg-neutral-50 rounded-lg p-5 border border-neutral-100 shadow-sm">
-          <h4 className="font-semibold text-neutral-800 flex items-center gap-2 mb-4 pb-2 border-b border-neutral-200">
-            <User className="w-4 h-4 text-blue-500" />
+        <div className="bg-[#F8FAFC] rounded-2xl p-6 border border-[#E2E8F0] shadow-sm">
+          <h4 className="font-semibold text-[#0F172A] flex items-center gap-2.5 mb-5 pb-3 border-b border-[#E2E8F0] text-[15px]">
+            <User className="w-4 h-4 text-[#2563EB]" />
             Data Diri
           </h4>
-          <dl className="space-y-3 text-sm">
+          <dl className="space-y-4 text-sm">
             <div>
-              <dt className="text-neutral-500">Nama Lengkap</dt>
-              <dd className="font-medium text-neutral-900">{data.nama_lengkap || "-"}</dd>
+              <dt className="text-[#64748B] text-[13px]">Nama Lengkap</dt>
+              <dd className="font-medium text-[#0F172A] mt-0.5">{data.nama_lengkap || "-"}</dd>
             </div>
             <div>
-              <dt className="text-neutral-500">Nama Panggilan</dt>
-              <dd className="font-medium text-neutral-900">{data.nama_panggilan || "-"}</dd>
+              <dt className="text-[#64748B] text-[13px]">Nama Panggilan</dt>
+              <dd className="font-medium text-[#0F172A] mt-0.5">{data.nama_panggilan || "-"}</dd>
             </div>
             <div>
-              <dt className="text-neutral-500">Email</dt>
-              <dd className="font-medium text-neutral-900">{data.email || "-"}</dd>
+              <dt className="text-[#64748B] text-[13px]">Email</dt>
+              <dd className="font-medium text-[#0F172A] mt-0.5">{data.email || "-"}</dd>
             </div>
             <div>
-              <dt className="text-neutral-500">Nomor HP</dt>
-              <dd className="font-medium text-neutral-900">{data.nomor_hp || "-"}</dd>
+              <dt className="text-[#64748B] text-[13px]">Nomor HP</dt>
+              <dd className="font-medium text-[#0F172A] mt-0.5">{data.nomor_hp || "-"}</dd>
             </div>
             <div>
-              <dt className="text-neutral-500">Jenis Kelamin</dt>
-              <dd className="font-medium text-neutral-900">{data.jenis_kelamin || "-"}</dd>
+              <dt className="text-[#64748B] text-[13px]">Jenis Kelamin</dt>
+              <dd className="font-medium text-[#0F172A] mt-0.5">{data.jenis_kelamin || "-"}</dd>
             </div>
             <div>
-              <dt className="text-neutral-500">Tanggal Lahir</dt>
-              <dd className="font-medium text-neutral-900">
+              <dt className="text-[#64748B] text-[13px]">Tanggal Lahir</dt>
+              <dd className="font-medium text-[#0F172A] mt-0.5">
                 {data.tanggal_lahir ? format(data.tanggal_lahir, "dd MMMM yyyy", { locale: id }) : "-"}
               </dd>
             </div>
             <div>
-              <dt className="text-neutral-500">NIK</dt>
-              <dd className="font-medium text-neutral-900">{data.nik || "-"}</dd>
+              <dt className="text-[#64748B] text-[13px]">NIK</dt>
+              <dd className="font-medium text-[#0F172A] mt-0.5">{data.nik || "-"}</dd>
             </div>
             <div>
-              <dt className="text-neutral-500">Alamat</dt>
-              <dd className="font-medium text-neutral-900">{data.alamat_lengkap || "-"}</dd>
+              <dt className="text-[#64748B] text-[13px]">Alamat</dt>
+              <dd className="font-medium text-[#0F172A] mt-0.5">{data.alamat_lengkap || "-"}</dd>
             </div>
             <div>
-              <dt className="text-neutral-500">Provinsi</dt>
-              <dd className="font-medium text-neutral-900">{getProvinceLabel(data.provinsi)}</dd>
+              <dt className="text-[#64748B] text-[13px]">Provinsi</dt>
+              <dd className="font-medium text-[#0F172A] mt-0.5">{getProvinceLabel(data.provinsi)}</dd>
             </div>
           </dl>
         </div>
 
         <div className="space-y-6">
           {/* Jadwal Konsultasi */}
-          <div className="bg-neutral-50 rounded-lg p-5 border border-neutral-100 shadow-sm">
-            <h4 className="font-semibold text-neutral-800 flex items-center gap-2 mb-4 pb-2 border-b border-neutral-200">
-              <Calendar className="w-4 h-4 text-blue-500" />
+          <div className="bg-[#F8FAFC] rounded-2xl p-6 border border-[#E2E8F0] shadow-sm">
+            <h4 className="font-semibold text-[#0F172A] flex items-center gap-2.5 mb-5 pb-3 border-b border-[#E2E8F0] text-[15px]">
+              <Calendar className="w-4 h-4 text-[#2563EB]" />
               Jadwal & Metode
             </h4>
-            <dl className="space-y-3 text-sm">
+            <dl className="space-y-4 text-sm">
               <div>
-                <dt className="text-neutral-500">Tanggal Konsultasi</dt>
-                <dd className="font-medium text-neutral-900">
+                <dt className="text-[#64748B] text-[13px]">Tanggal Konsultasi</dt>
+                <dd className="font-medium text-[#0F172A] mt-0.5">
                   {data.tanggal_konsultasi ? format(data.tanggal_konsultasi, "EEEE, dd MMMM yyyy", { locale: id }) : "-"}
                 </dd>
               </div>
               <div>
-                <dt className="text-neutral-500">Waktu</dt>
-                <dd className="font-medium text-neutral-900">{data.waktu_konsultasi || "-"}</dd>
+                <dt className="text-[#64748B] text-[13px]">Waktu</dt>
+                <dd className="font-medium text-[#0F172A] mt-0.5">{data.waktu_konsultasi || "-"}</dd>
               </div>
               <div>
-                <dt className="text-neutral-500">Metode</dt>
-                <dd className="font-medium text-neutral-900">{data.metode_konsultasi || "-"}</dd>
+                <dt className="text-[#64748B] text-[13px]">Metode</dt>
+                <dd className="font-medium text-[#0F172A] mt-0.5">{data.metode_konsultasi || "-"}</dd>
               </div>
             </dl>
           </div>
 
           {/* Informasi Tambahan */}
-          <div className="bg-neutral-50 rounded-lg p-5 border border-neutral-100 shadow-sm">
-            <h4 className="font-semibold text-neutral-800 flex items-center gap-2 mb-4 pb-2 border-b border-neutral-200">
-              <Info className="w-4 h-4 text-blue-500" />
+          <div className="bg-[#F8FAFC] rounded-2xl p-6 border border-[#E2E8F0] shadow-sm">
+            <h4 className="font-semibold text-[#0F172A] flex items-center gap-2.5 mb-5 pb-3 border-b border-[#E2E8F0] text-[15px]">
+              <Info className="w-4 h-4 text-[#2563EB]" />
               Informasi Tambahan
             </h4>
-            <dl className="space-y-3 text-sm">
+            <dl className="space-y-4 text-sm">
               <div>
-                <dt className="text-neutral-500">Urutan Konseling</dt>
-                <dd className="font-medium text-neutral-900">{data.urutan_konseling || "-"}</dd>
+                <dt className="text-[#64748B] text-[13px]">Urutan Konseling</dt>
+                <dd className="font-medium text-[#0F172A] mt-0.5">{data.urutan_konseling || "-"}</dd>
               </div>
               <div>
-                <dt className="text-neutral-500">Sumber Informasi</dt>
-                <dd className="font-medium text-neutral-900">
+                <dt className="text-[#64748B] text-[13px]">Sumber Informasi</dt>
+                <dd className="font-medium text-[#0F172A] mt-0.5">
                   {data.sumber_informasi === "Lainnya" ? data.sumber_informasi_lainnya : data.sumber_informasi || "-"}
                 </dd>
               </div>
@@ -121,31 +121,31 @@ export function Step5Review() {
         </div>
         
         {/* Informasi Konsultasi */}
-        <div className="md:col-span-2 bg-neutral-50 rounded-lg p-5 border border-neutral-100 shadow-sm">
-          <h4 className="font-semibold text-neutral-800 flex items-center gap-2 mb-4 pb-2 border-b border-neutral-200">
-            <FileText className="w-4 h-4 text-blue-500" />
+        <div className="md:col-span-2 bg-[#F8FAFC] rounded-2xl p-6 border border-[#E2E8F0] shadow-sm">
+          <h4 className="font-semibold text-[#0F172A] flex items-center gap-2.5 mb-5 pb-3 border-b border-[#E2E8F0] text-[15px]">
+            <FileText className="w-4 h-4 text-[#2563EB]" />
             Detail Permasalahan
           </h4>
-          <dl className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <dl className="grid grid-cols-1 md:grid-cols-2 gap-5 text-sm">
             <div>
-              <dt className="text-neutral-500 mb-1">Status</dt>
-              <dd className="font-medium text-neutral-900">
+              <dt className="text-[#64748B] text-[13px] mb-1">Status</dt>
+              <dd className="font-medium text-[#0F172A]">
                 {data.status === "Lainnya" ? data.status_lainnya : data.status || "-"}
               </dd>
             </div>
             <div>
-              <dt className="text-neutral-500 mb-1">Alasan</dt>
-              <dd className="font-medium text-neutral-900">
+              <dt className="text-[#64748B] text-[13px] mb-1">Alasan</dt>
+              <dd className="font-medium text-[#0F172A]">
                 {data.alasan === "Lainnya" ? data.alasan_lainnya : data.alasan || "-"}
               </dd>
             </div>
             <div className="md:col-span-2">
-              <dt className="text-neutral-500 mb-1">Topik Permasalahan</dt>
-              <dd className="font-medium text-neutral-900">
+              <dt className="text-[#64748B] text-[13px] mb-2">Topik Permasalahan</dt>
+              <dd className="font-medium text-[#0F172A]">
                 {data.topik_permasalahan?.length ? (
                   <div className="flex flex-wrap gap-2 mt-1">
                     {data.topik_permasalahan.map((t) => (
-                      <span key={t} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      <span key={t} className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[#DBEAFE] text-[#1E40AF] border border-[#BFDBFE]">
                         {t === "Lainnya" ? data.topik_lainnya : t}
                       </span>
                     ))}
@@ -156,8 +156,8 @@ export function Step5Review() {
               </dd>
             </div>
             <div className="md:col-span-2 mt-2">
-              <dt className="text-neutral-500 mb-2">Gambaran Permasalahan</dt>
-              <dd className="text-neutral-800 bg-white p-4 rounded border border-neutral-200 whitespace-pre-wrap leading-relaxed">
+              <dt className="text-[#64748B] text-[13px] mb-2">Gambaran Permasalahan</dt>
+              <dd className="text-[#334155] bg-white p-5 rounded-xl border border-[#E2E8F0] whitespace-pre-wrap leading-relaxed text-[15px]">
                 {data.ceritakan_permasalahan || "-"}
               </dd>
             </div>

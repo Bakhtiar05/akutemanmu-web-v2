@@ -17,7 +17,7 @@ export function Step1DataDiri() {
   const { control } = useFormContext<BookingFormData>();
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
       <CustomFormField
         control={control}
         name="email"
@@ -55,7 +55,7 @@ export function Step1DataDiri() {
                   <Button
                     variant={"outline"}
                     className={cn(
-                      "w-full pl-3 text-left font-normal",
+                      "w-full h-[52px] rounded-xl border-[#E2E8F0] pl-4 text-left font-normal hover:border-neutral-400 transition-all duration-200",
                       !field.value && "text-muted-foreground"
                     )}
                   >
@@ -68,7 +68,7 @@ export function Step1DataDiri() {
                   </Button>
                 </FormControl>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 z-[100] bg-white border border-neutral-200 shadow-xl" align="start" sideOffset={8}>
+              <PopoverContent className="w-auto p-0 z-[100] bg-white border border-[#E2E8F0] shadow-lg rounded-xl" align="start" sideOffset={8}>
                 <Calendar
                   mode="single"
                   captionLayout="dropdown"
@@ -97,15 +97,15 @@ export function Step1DataDiri() {
               <RadioGroup
                 onValueChange={field.onChange}
                 defaultValue={field.value}
-                className="flex flex-row space-x-4"
+                className="flex flex-row gap-6"
               >
-                <FormItem className="flex items-center space-x-2 space-y-0">
+                <FormItem className="flex items-center gap-3 space-y-0">
                   <FormControl>
                     <RadioGroupItem value="Laki-laki" />
                   </FormControl>
                   <FormLabel className="font-normal">Laki-laki</FormLabel>
                 </FormItem>
-                <FormItem className="flex items-center space-x-2 space-y-0">
+                <FormItem className="flex items-center gap-3 space-y-0">
                   <FormControl>
                     <RadioGroupItem value="Perempuan" />
                   </FormControl>
@@ -146,7 +146,7 @@ export function Step1DataDiri() {
                     variant="outline"
                     role="combobox"
                     className={cn(
-                      "w-full justify-between",
+                      "w-full h-[52px] rounded-xl border-[#E2E8F0] justify-between hover:border-neutral-400 transition-all duration-200",
                       !field.value && "text-muted-foreground"
                     )}
                   >
@@ -157,7 +157,7 @@ export function Step1DataDiri() {
                   </Button>
                 </FormControl>
               </PopoverTrigger>
-              <PopoverContent className="w-full md:w-[350px] p-0 bg-white border border-neutral-200 shadow-xl z-[100]">
+              <PopoverContent className="w-full md:w-[350px] p-0 bg-white border border-[#E2E8F0] shadow-lg rounded-xl z-[100]">
                 <Command>
                   <CommandInput placeholder="Cari provinsi..." />
                   <CommandList>
