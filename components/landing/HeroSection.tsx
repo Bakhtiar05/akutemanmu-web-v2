@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { motion, useReducedMotion, Variants } from 'framer-motion'
+import { motion, useReducedMotion, Variants, AnimatePresence } from 'framer-motion'
 
 const TypewriterText = ({ text }: { text: string }) => {
   const [displayedText, setDisplayedText] = useState('')
@@ -36,6 +36,42 @@ const TypewriterText = ({ text }: { text: string }) => {
       </motion.span>
     </span>
   )
+}
+
+const dynamicWords = ["Didengar", "Dimengerti", "Divalidasi", "Dihargai"];
+
+const DynamicTextSwap = () => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % dynamicWords.length);
+    }, 2500);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="flex flex-col items-center lg:items-start w-full">
+      <span className="text-slate-800 text-[clamp(2.5rem,5vw,4rem)] font-extrabold leading-[1.1] tracking-tight">
+        Ceritamu Layak
+      </span>
+      {/* Stable container height to prevent layout shift */}
+      <div className="relative h-[48px] md:h-[64px] lg:h-[80px] w-full flex justify-center lg:justify-start mt-2 md:mt-3">
+        <AnimatePresence>
+          <motion.span
+            key={index}
+            initial={{ y: 25, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -25, opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            className="absolute font-bold text-4xl md:text-5xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400 pb-2 md:pb-3 lg:pb-4"
+          >
+            {dynamicWords[index]}
+          </motion.span>
+        </AnimatePresence>
+      </div>
+    </div>
+  );
 }
 
 export default function HeroSection() {
@@ -174,13 +210,12 @@ export default function HeroSection() {
           initial="hidden"
           animate="visible"
         >
-          <motion.h1
+          <motion.div
             variants={fadeUpVariants}
-            className="text-[clamp(2.5rem,5vw,4rem)] font-extrabold leading-[1.1] tracking-tight text-neutral-900 mb-6"
+            className="mb-8 w-full"
           >
-            Ceritamu Layak <br className="hidden lg:block" />
-            <span className="text-[#2563EB]">Didengar &amp; Dimengerti</span>
-          </motion.h1>
+            <DynamicTextSwap />
+          </motion.div>
 
           <motion.p
             variants={fadeUpVariants}

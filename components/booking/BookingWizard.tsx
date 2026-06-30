@@ -14,14 +14,7 @@ import { ArrowLeft, ArrowRight, Loader2, Check } from "lucide-react";
 import { submitBooking } from "@/app/actions/booking";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
 
@@ -37,8 +30,6 @@ export function BookingWizard() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submittedRequestNumber, setSubmittedRequestNumber] = useState<string | null>(null);
-  const [showSummaryDialog, setShowSummaryDialog] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
   const methods = useForm<BookingFormData>({
@@ -106,13 +97,10 @@ export function BookingWizard() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleOpenSummary = async () => {
+  const handleFinalSubmit = async () => {
     const isValid = await trigger();
     if (!isValid) return;
-    setShowSummaryDialog(true);
-  };
 
-  const handleFinalSubmit = async () => {
     setIsSubmitting(true);
     try {
       const data = getValues();
@@ -123,13 +111,10 @@ export function BookingWizard() {
           title: "Berhasil",
           description: "Permohonan Anda berhasil dikirim. Mengalihkan ke halaman status...",
         });
-        setSubmittedRequestNumber(res.requestNumber);
-        // Do NOT call setShowSummaryDialog(false) here to avoid Radix UI exit animation locking the body pointer-events
         
         // Immediately redirect to the status page.
         // Using router.push prevents mobile browsers (like Safari) from blocking the redirect
-        // if the API call takes too long. We purposefully do NOT close the dialog manually 
-        // to avoid the Radix UI unmount/pointer-events bug.
+        // if the API call takes too long.
         router.push(`/booking/success?request_number=${res.requestNumber}`);
       } else {
         throw new Error(res.error || "Gagal menyimpan data");
@@ -222,7 +207,7 @@ export function BookingWizard() {
             <ArrowRight className="w-4 h-4 ml-1.5 md:ml-2" />
           </Button>
         ) : (
-          <Button onClick={handleOpenSummary} disabled={isSubmitting} className="bg-[#22C55E] hover:bg-[#16A34A] rounded-xl px-5 md:px-8 h-12 shadow-md text-sm md:text-[15px] text-white font-semibold transition-all duration-200 shrink-0">
+          <Button onClick={handleFinalSubmit} disabled={isSubmitting} className="bg-[#22C55E] hover:bg-[#16A34A] rounded-xl px-5 md:px-8 h-12 shadow-md text-sm md:text-[15px] text-white font-semibold transition-all duration-200 shrink-0">
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 mr-1.5 md:mr-2 animate-spin" />
@@ -235,72 +220,6 @@ export function BookingWizard() {
         )}
       </div>
 
-      <Dialog open={showSummaryDialog} onOpenChange={setShowSummaryDialog}>
-        <DialogContent className="sm:max-w-md bg-white rounded-2xl border-[#E2E8F0]">
-          <DialogHeader>
-            <DialogTitle className="text-[#0F172A] font-sans text-xl">Ringkasan Permohonan & Tagihan</DialogTitle>
-            <DialogDescription className="font-sans text-[#64748B]">
-              Mohon periksa kembali detail permohonan Anda.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-3.5 my-5 font-sans">
-            <div className="flex justify-between items-start border-b border-[#E2E8F0] pb-3">
-              <span className="text-sm text-[#64748B]">Nama Lengkap</span>
-              <span className="text-sm font-medium text-[#0F172A] text-right">{formValues.nama_lengkap}</span>
-            </div>
-            <div className="flex justify-between items-start border-b border-[#E2E8F0] pb-3">
-              <span className="text-sm text-[#64748B]">Metode</span>
-              <span className="text-sm font-medium text-[#0F172A] text-right">{formValues.metode_konsultasi}</span>
-            </div>
-            <div className="flex justify-between items-start border-b border-[#E2E8F0] pb-3">
-              <span className="text-sm text-[#64748B]">Jadwal & Durasi</span>
-              <span className="text-sm font-medium text-[#0F172A] text-right">
-                {formValues.tanggal_konsultasi ? format(new Date(formValues.tanggal_konsultasi), "dd MMMM yyyy", { locale: id }) : ""}
-                <br />
-                {formValues.waktu_konsultasi} (1 Jam)
-              </span>
-            </div>
-            <div className="flex justify-between items-start pt-1">
-              <span className="text-sm font-semibold text-[#334155]">Total Tagihan</span>
-              <span className="text-lg font-bold text-[#2563EB]">
-                Rp {price.toLocaleString("id-ID")}
-              </span>
-            </div>
-          </div>
-
-          <p className="text-xs text-[#94A3B8] leading-relaxed font-sans">
-            Dengan melanjutkan, Anda akan diarahkan ke halaman pembayaran Xendit. Permohonan Anda akan diproses setelah pembayaran berhasil.
-          </p>
-
-          <DialogFooter className="flex-col sm:flex-row gap-2 sm:gap-0 mt-5 font-sans">
-            <Button 
-              variant="outline" 
-              onClick={() => {
-                if (submittedRequestNumber) {
-                  router.push(`/booking/success?request_number=${submittedRequestNumber}`);
-                } else {
-                  setShowSummaryDialog(false);
-                }
-              }} 
-              disabled={isSubmitting && !submittedRequestNumber}
-              className="w-full sm:w-auto rounded-xl h-11 border-[#E2E8F0] hover:bg-[#F8FAFC]"
-            >
-              {submittedRequestNumber ? "Ke Halaman Status" : "Batal"}
-            </Button>
-            <Button onClick={handleFinalSubmit} disabled={isSubmitting} className="booking-btn-primary text-white w-full sm:w-auto rounded-xl h-11 font-semibold">
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Mengirim...
-                </>
-              ) : (
-                "Lanjut ke Pembayaran"
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
