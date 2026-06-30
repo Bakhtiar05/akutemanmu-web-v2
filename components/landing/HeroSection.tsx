@@ -93,6 +93,44 @@ export default function HeroSection() {
         <div className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] rounded-full bg-[#3B82F6]/[0.04] blur-[120px]" />
       </div>
 
+      {/* MOBILE & TABLET FULL-BLEED IMAGE (Visible < 1024px) */}
+      <motion.div
+        className="lg:hidden relative w-full h-[55vh] sm:h-[65vh] -mt-[72px] mb-8 overflow-hidden z-0"
+        initial="hidden"
+        animate="visible"
+        variants={imageVariants}
+      >
+        <div
+          className="absolute inset-0 w-full h-full"
+          style={{
+            backgroundImage: 'url(/assets/latar-belakang.png)',
+            backgroundPosition: '70% 30%', // Focus on the women
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat'
+          }}
+          title="Counseling Session"
+        />
+
+        {/* Gradient fade at the bottom of the image to blend with the text section */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#F8FBFF] to-transparent pointer-events-none z-0" />
+
+        {/* MOBILE INTERACTIVE BUBBLE */}
+        {isMounted && (
+          <motion.div
+            animate={prefersReducedMotion ? {} : { y: [0, -8, 0] }}
+            transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+            className="absolute z-10 pointer-events-auto
+                       top-[25%] left-[8%] sm:left-[15%]
+                       bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] px-3.5 py-2 max-w-[180px]
+                       rounded-[14px]
+                       shadow-[0_10px_20px_-5px_rgba(29,78,216,0.3),inset_1px_1px_2px_rgba(255,255,255,0.3),inset_-1px_-1px_2px_rgba(0,0,0,0.1)]
+                       font-sans font-medium text-white text-[11px] leading-tight"
+          >
+            <TypewriterText text={chatText} />
+          </motion.div>
+        )}
+      </motion.div>
+
       {/* FULL-WIDTH DESKTOP IMAGE */}
       <div className="hidden lg:block absolute inset-0 pointer-events-none z-0">
         <motion.div
@@ -126,42 +164,7 @@ export default function HeroSection() {
         </motion.div>
       )}
 
-      <div className="relative z-10 w-full max-w-[1280px] mx-auto px-6 h-full flex flex-col lg:flex-row items-center justify-center lg:justify-between flex-1 py-12 lg:py-0">
-
-        {/* MOBILE & TABLET IMAGE (Visible < 1024px) */}
-        <motion.div
-          className="lg:hidden relative w-full aspect-[4/3] sm:aspect-[16/9] rounded-3xl overflow-hidden shadow-2xl mb-10 border border-white/50"
-          initial="hidden"
-          animate="visible"
-          variants={imageVariants}
-        >
-          <div
-            className="absolute inset-0 w-full h-full"
-            style={{
-              backgroundImage: 'url(/assets/latar-belakang.png)',
-              backgroundPosition: '70% center', // Focus on the women
-              backgroundSize: 'cover',
-              backgroundRepeat: 'no-repeat'
-            }}
-            title="Counseling Session"
-          />
-
-          {/* MOBILE INTERACTIVE BUBBLE */}
-          {isMounted && (
-            <motion.div
-              animate={prefersReducedMotion ? {} : { y: [0, -8, 0] }}
-              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-              className="absolute z-10 pointer-events-auto
-                         top-[22%] left-[12%] sm:left-[18%]
-                         bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] px-3.5 py-2 max-w-[180px]
-                         rounded-[14px]
-                         shadow-[0_10px_20px_-5px_rgba(29,78,216,0.3),inset_1px_1px_2px_rgba(255,255,255,0.3),inset_-1px_-1px_2px_rgba(0,0,0,0.1)]
-                         font-sans font-medium text-white text-[11px] leading-tight"
-            >
-              <TypewriterText text={chatText} />
-            </motion.div>
-          )}
-        </motion.div>
+      <div className="relative z-10 w-full max-w-[1280px] mx-auto px-6 h-full flex flex-col lg:flex-row items-center justify-center lg:justify-between flex-1 pb-16 lg:py-0">
 
         {/* LEFT COLUMN: TEXT & CTA */}
         <motion.div
@@ -211,6 +214,9 @@ export default function HeroSection() {
           </motion.div>
         </motion.div>
       </div>
+
+      {/* Gradient fade to next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 lg:h-32 bg-gradient-to-b from-transparent to-white pointer-events-none z-10" />
     </section>
   )
 }
