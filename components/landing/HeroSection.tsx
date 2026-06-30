@@ -121,7 +121,7 @@ export default function HeroSection() {
             transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
             className="absolute z-10 pointer-events-auto
                        top-[25%] left-[8%] sm:left-[15%]
-                       bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] px-3.5 py-2 max-w-[180px]
+                       bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] pl-5 pr-3 py-2 max-w-[210px]
                        rounded-[14px]
                        shadow-[0_10px_20px_-5px_rgba(29,78,216,0.3),inset_1px_1px_2px_rgba(255,255,255,0.3),inset_-1px_-1px_2px_rgba(0,0,0,0.1)]
                        font-sans font-medium text-white text-[11px] leading-tight"
@@ -155,7 +155,7 @@ export default function HeroSection() {
           transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
           className="hidden lg:block absolute z-30 pointer-events-auto
                      top-[30%] right-[32%] xl:right-[35%]
-                     bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] px-4 py-2.5 max-w-[220px]
+                     bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] pl-6 pr-4 py-2.5 max-w-[220px]
                      rounded-2xl
                      shadow-[0_12px_25px_-5px_rgba(29,78,216,0.3),inset_2px_2px_3px_rgba(255,255,255,0.3),inset_-1px_-1px_3px_rgba(0,0,0,0.1)]
                      font-sans font-medium text-white text-[13px] leading-snug"
