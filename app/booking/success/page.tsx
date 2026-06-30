@@ -80,7 +80,7 @@ function SuccessPageContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-neutral-50 pt-24 pb-20 flex items-center justify-center">
+      <div className="min-h-screen bg-neutral-50 pt-16 pb-12 md:pt-24 md:pb-20 flex items-center justify-center">
         <div className="flex flex-col items-center">
           <Loader2 className="w-8 h-8 text-blue-600 animate-spin mb-4" />
           <p className="text-neutral-500 font-medium">Memuat data permohonan...</p>
@@ -95,25 +95,25 @@ function SuccessPageContent() {
   const isPending = successData.paymentStatus === "PENDING";
 
   return (
-    <div className="min-h-screen bg-neutral-50 pt-24 pb-20 flex items-center justify-center">
+    <div className="min-h-screen bg-neutral-50 pt-16 pb-12 md:pt-24 md:pb-20 flex items-center justify-center">
       <div className="max-w-xl w-full mx-auto px-4">
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-neutral-100 animate-fade-enter">
           {/* Header */}
-          <div className={`py-8 px-6 text-center border-b ${isPending ? 'bg-amber-50 border-amber-100' : 'bg-success/10 border-success/20'}`}>
-            <div className={`mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4 shadow-sm ${isPending ? 'bg-amber-500' : 'bg-success'}`}>
-              <CheckCircle2 className="w-8 h-8 text-white" />
+          <div className={`py-4 px-4 md:py-8 md:px-6 text-center border-b ${isPending ? 'bg-amber-50 border-amber-100' : 'bg-success/10 border-success/20'}`}>
+            <div className={`mx-auto w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mb-3 md:mb-4 shadow-sm ${isPending ? 'bg-amber-500' : 'bg-success'}`}>
+              <CheckCircle2 className="w-6 h-6 md:w-8 md:h-8 text-white" />
             </div>
-            <h1 className={`text-3xl font-display font-bold mb-2 ${isPending ? 'text-amber-600' : 'text-success'}`}>
+            <h1 className={`text-xl md:text-3xl font-display font-bold mb-1 md:mb-2 ${isPending ? 'text-amber-600' : 'text-success'}`}>
               {isPending ? 'Menunggu Pembayaran' : 'Pembayaran Berhasil'}
             </h1>
-            <p className={`font-medium ${isPending ? 'text-amber-700/80' : 'text-success/80'}`}>
+            <p className={`text-sm md:text-base font-medium ${isPending ? 'text-amber-700/80' : 'text-success/80'}`}>
               Terima kasih telah mempercayakan YukceritaIN.
             </p>
           </div>
 
           {/* Body */}
-          <div className="p-8">
-            <p className="text-center text-neutral-600 mb-8 leading-relaxed">
+          <div className="p-4 md:p-8 flex-1 flex flex-col justify-center">
+            <p className="text-center text-sm md:text-base text-neutral-600 mb-4 md:mb-8 leading-relaxed">
               {isPending ? (
                 "Silakan selesaikan pembayaran Anda agar permohonan dapat diproses."
               ) : (
@@ -122,16 +122,16 @@ function SuccessPageContent() {
             </p>
 
             {/* Summary Card */}
-            <div className="bg-neutral-50 rounded-xl p-6 border border-neutral-200 mb-8 relative">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-4 text-xs font-semibold tracking-wider text-neutral-500 uppercase rounded-full border border-neutral-200">
+            <div className="bg-neutral-50 rounded-xl p-4 md:p-6 border border-neutral-200 mb-4 md:mb-8 relative h-auto overflow-visible flex-1">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-3 md:px-4 text-[10px] md:text-xs font-semibold tracking-wider text-neutral-500 uppercase rounded-full border border-neutral-200 whitespace-nowrap">
                 Detail Permohonan
               </div>
               
-              <div className="space-y-4 mt-2">
+              <div className="space-y-2 md:space-y-4 mt-2">
                 <div>
-                  <p className="text-xs text-neutral-500 uppercase font-semibold mb-1">Nomor Permohonan</p>
-                  <div className="flex items-center justify-between bg-white border border-neutral-200 rounded-lg px-4 py-2">
-                    <span className="font-mono font-bold text-lg text-blue-600">{successData.requestNumber}</span>
+                  <p className="text-[10px] md:text-xs text-neutral-500 uppercase font-semibold mb-0.5 md:mb-1">Nomor Permohonan</p>
+                  <div className="flex items-center justify-between bg-white border border-neutral-200 rounded-lg px-3 py-1.5 md:px-4 md:py-2">
+                    <span className="font-mono font-bold text-base md:text-lg text-blue-600">{successData.requestNumber}</span>
                     <Button variant="ghost" size="icon" onClick={handleCopyRequestNumber} className="h-8 w-8 text-neutral-400 hover:text-blue-600">
                       <Copy className="h-4 w-4" />
                     </Button>
@@ -139,39 +139,39 @@ function SuccessPageContent() {
                   <p className="text-[10px] text-neutral-400 mt-1">*Simpan nomor ini untuk keperluan pelacakan status di halaman Cek Status.</p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-neutral-200">
+                <div className="grid grid-cols-2 gap-2 md:gap-4 pt-2 md:pt-4 border-t border-neutral-200">
                   <div>
-                    <p className="text-xs text-neutral-500 uppercase font-semibold mb-1 flex items-center gap-1">
+                    <p className="text-[10px] md:text-xs text-neutral-500 uppercase font-semibold mb-0.5 md:mb-1 flex items-center gap-1">
                       <Calendar className="w-3 h-3" /> Tanggal
                     </p>
-                    <p className="font-medium text-neutral-900">
+                    <p className="text-sm md:text-base font-medium text-neutral-900">
                       {format(new Date(successData.date), "dd MMM yyyy", { locale: id })}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs text-neutral-500 uppercase font-semibold mb-1 flex items-center gap-1">
+                    <p className="text-[10px] md:text-xs text-neutral-500 uppercase font-semibold mb-0.5 md:mb-1 flex items-center gap-1">
                       <Clock className="w-3 h-3" /> Waktu (WIB)
                     </p>
-                    <p className="font-medium text-neutral-900">
+                    <p className="text-sm md:text-base font-medium text-neutral-900">
                       {successData.time}
                     </p>
                   </div>
                   <div className="col-span-2">
-                    <p className="text-xs text-neutral-500 uppercase font-semibold mb-1 flex items-center gap-1">
+                    <p className="text-[10px] md:text-xs text-neutral-500 uppercase font-semibold mb-0.5 md:mb-1 flex items-center gap-1">
                       {successData.method === "Online" ? <Video className="w-3 h-3" /> : <MapPin className="w-3 h-3" />} 
                       Metode
                     </p>
-                    <p className="font-medium text-neutral-900">
+                    <p className="text-sm md:text-base font-medium text-neutral-900">
                       {successData.method} {successData.method === "Online" ? "(Google Meet)" : "(Kota Serang)"}
                     </p>
                   </div>
                   
                   {isPaid && (
-                    <div className="col-span-2 pt-2 border-t border-neutral-100 mt-2">
-                      <p className="text-xs text-neutral-500 uppercase font-semibold mb-1 flex items-center gap-1">
+                    <div className="col-span-2 pt-2 border-t border-neutral-100 mt-1 md:mt-2">
+                      <p className="text-[10px] md:text-xs text-neutral-500 uppercase font-semibold mb-0.5 md:mb-1 flex items-center gap-1">
                         <CreditCard className="w-3 h-3" /> Metode Pembayaran
                       </p>
-                      <p className="font-medium text-neutral-900">
+                      <p className="text-sm md:text-base font-medium text-neutral-900">
                         {successData.paymentMethod || "Telah Dibayar"}
                       </p>
                     </div>
@@ -181,22 +181,22 @@ function SuccessPageContent() {
             </div>
 
             {/* Actions */}
-            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 w-full justify-center items-center mt-4">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 md:gap-3 w-full justify-center items-center mt-2 md:mt-4">
               {isPending && (
-                <Button onClick={fetchStatus} disabled={isRefreshing} variant="outline" className="rounded-full px-6 py-5 h-auto text-sm sm:text-base font-semibold shadow-sm w-full sm:w-auto">
+                <Button onClick={fetchStatus} disabled={isRefreshing} variant="outline" className="rounded-full px-4 md:px-6 py-4 md:py-5 h-auto text-sm sm:text-base font-semibold shadow-sm w-full sm:w-auto">
                   {isRefreshing ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCcw className="w-4 h-4 mr-2" />}
                   Cek Status
                 </Button>
               )}
               {isPending && successData.invoiceUrl && (
-                <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6 py-5 h-auto text-sm sm:text-base font-semibold shadow-blue w-full sm:w-auto">
+                <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-4 md:px-6 py-4 md:py-5 h-auto text-sm sm:text-base font-semibold shadow-blue w-full sm:w-auto">
                   <a href={successData.invoiceUrl}>
-                    Lanjutkan Pembayaran
+                    Bayar Sekarang
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </a>
                 </Button>
               )}
-              <Button onClick={() => router.push("/")} variant={isPending ? "outline" : "default"} className={`${!isPending && "bg-blue-600 hover:bg-blue-700 text-white"} rounded-full px-6 py-5 h-auto text-sm sm:text-base font-semibold shadow-sm w-full sm:w-auto`}>
+              <Button onClick={() => router.push("/")} variant={isPending ? "outline" : "default"} className={`${!isPending && "bg-blue-600 hover:bg-blue-700 text-white"} rounded-full px-4 md:px-6 py-4 md:py-5 h-auto text-sm sm:text-base font-semibold shadow-sm w-full sm:w-auto`}>
                 Kembali
               </Button>
             </div>
@@ -210,7 +210,7 @@ function SuccessPageContent() {
 export default function BookingSuccessPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-neutral-50 pt-24 pb-20 flex items-center justify-center">
+      <div className="min-h-screen bg-neutral-50 pt-16 pb-12 md:pt-24 md:pb-20 flex items-center justify-center">
         <div className="flex flex-col items-center">
           <Loader2 className="w-8 h-8 text-blue-600 animate-spin mb-4" />
           <p className="text-neutral-500 font-medium">Memuat...</p>
