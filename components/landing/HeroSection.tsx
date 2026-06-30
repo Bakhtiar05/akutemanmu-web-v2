@@ -1,117 +1,215 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { motion, useReducedMotion, Variants } from 'framer-motion'
 
-function useCountUp(target: number, suffix: string, duration = 1800) {
-  const [display, setDisplay] = useState('0' + suffix)
-  const ref = useRef<HTMLSpanElement>(null)
-  const started = useRef(false)
+const TypewriterText = ({ text }: { text: string }) => {
+  const [displayedText, setDisplayedText] = useState('')
 
   useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
-          started.current = true
-          const start = performance.now()
-          const animate = (now: number) => {
-            const progress = Math.min((now - start) / duration, 1)
-            const eased = 1 - Math.pow(1 - progress, 3)
-            const value = Math.round(eased * target)
-            setDisplay(value.toLocaleString('id-ID') + suffix)
-            if (progress < 1) requestAnimationFrame(animate)
-          }
-          requestAnimationFrame(animate)
-        }
-      },
-      { threshold: 0.3 }
-    )
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [target, suffix, duration])
+    let timeoutId: NodeJS.Timeout
+    setDisplayedText('')
 
-  return { ref, display }
+    let i = 0
+    const typeWriter = () => {
+      if (i <= text.length) {
+        setDisplayedText(text.slice(0, i))
+        i++
+        timeoutId = setTimeout(typeWriter, 35)
+      }
+    }
+
+    typeWriter()
+    return () => clearTimeout(timeoutId)
+  }, [text])
+
+  return (
+    <span className="text-left">
+      <span>{displayedText}</span>
+      <motion.span
+        animate={{ opacity: [1, 0] }}
+        transition={{ repeat: Infinity, duration: 0.8 }}
+        className="inline-block ml-[2px] font-normal"
+      >
+        |
+      </motion.span>
+    </span>
+  )
 }
 
 export default function HeroSection() {
-  const stat1 = useCountUp(50, 'K+')
-  const stat2 = useCountUp(200, '+')
+  const prefersReducedMotion = useReducedMotion()
+  const [isMounted, setIsMounted] = useState(false)
+  const [messageIndex, setMessageIndex] = useState(0)
+
+  const messages = [
+    'Ada yang sedang membebani pikiranmu hari ini?',
+    'Yuk, Ceritain 🤗'
+  ]
+
+  useEffect(() => {
+    setIsMounted(true)
+    const interval = setInterval(() => {
+      setMessageIndex((prev) => (prev + 1) % messages.length)
+    }, 6000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const chatText = messages[messageIndex]
+
+  const containerVariants: Variants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.1,
+      },
+    },
+  }
+
+  const fadeUpVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }
+    },
+  }
+
+  const imageVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { duration: 1.2, ease: "easeOut" }
+    }
+  }
 
   return (
-    <section id="hero" className="relative pt-[72px] bg-white overflow-hidden">
-      <div className="max-w-container mx-auto px-6 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        {/* Text */}
-        <div className="max-w-xl">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-500 rounded-full text-sm font-semibold mb-6">
-            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse-dot" />
-            Dipercaya oleh 50.000+ pengguna
-          </div>
-
-          <h1 className="font-display text-[clamp(2.2rem,5vw,3.6rem)] font-bold leading-[1.1] tracking-tight text-neutral-900 mb-4">
-            Kesehatan Mentalmu<br />
-            <span className="gradient-text">Adalah Prioritas</span>
-          </h1>
-
-          <p className="text-neutral-500 text-lg leading-relaxed mb-8 max-w-md">
-            Terhubung dengan psikolog profesional untuk konseling online yang aman, nyaman, dan terjangkau. Kapan saja, di mana saja.
-          </p>
-
-          <div className="flex flex-wrap gap-3 mb-12">
-            <Link href="/konsultasi" className="btn btn-primary btn-large">Mulai Konseling</Link>
-            <Link href="#how-it-works" className="btn btn-outline btn-large">Pelajari Lebih Lanjut</Link>
-          </div>
-
-          {/* Trust Stats */}
-          <div className="flex flex-wrap gap-8">
-            <div>
-              <span ref={stat1.ref} className="text-2xl font-bold text-neutral-900">{stat1.display}</span>
-              <p className="text-xs text-neutral-400 mt-0.5">Pengguna Aktif</p>
-            </div>
-            <div className="w-px bg-neutral-200" />
-            <div>
-              <span ref={stat2.ref} className="text-2xl font-bold text-neutral-900">{stat2.display}</span>
-              <p className="text-xs text-neutral-400 mt-0.5">Psikolog Bersertifikat</p>
-            </div>
-            <div className="w-px bg-neutral-200" />
-            <div>
-              <span className="text-2xl font-bold text-neutral-900">4.9★</span>
-              <p className="text-xs text-neutral-400 mt-0.5">Rating Platform</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Visual */}
-        <div className="relative hidden lg:block">
-          <Image src="/assets/hero_illustration.png" alt="Ilustrasi kesehatan mental" width={520} height={480} className="w-full h-auto" priority />
-
-          {/* Floating Card 1 */}
-          <div className="absolute top-8 -right-2 bg-white rounded-xl shadow-lg px-4 py-3 flex items-center gap-3 animate-float-1">
-            <span className="text-2xl">😌</span>
-            <div>
-              <p className="text-sm font-semibold text-neutral-900">Sesi Pertama</p>
-              <p className="text-xs text-neutral-400">Gratis untuk semua</p>
-            </div>
-          </div>
-
-          {/* Floating Card 2 */}
-          <div className="absolute bottom-12 -left-4 bg-white rounded-xl shadow-lg px-4 py-3 flex items-center gap-3 animate-float-2">
-            <span className="text-2xl">🔒</span>
-            <div>
-              <p className="text-sm font-semibold text-neutral-900">100% Rahasia</p>
-              <p className="text-xs text-neutral-400">Data terlindungi</p>
-            </div>
-          </div>
-        </div>
+    <section id="hero" className="relative w-full min-h-[100vh] bg-[#F8FBFF] overflow-hidden flex flex-col justify-center pt-[72px]">
+      {/* Subtle Background Effects */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+        <div className="absolute top-[10%] left-[20%] w-[400px] h-[400px] rounded-full bg-[#2563EB]/[0.03] blur-[100px]" />
+        <div className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] rounded-full bg-[#3B82F6]/[0.04] blur-[120px]" />
       </div>
 
-      {/* Wave */}
-      <div className="wave-divider">
-        <svg viewBox="0 0 1440 60" preserveAspectRatio="none">
-          <path d="M0,20 C480,60 960,0 1440,30 L1440,60 L0,60 Z" fill="#F0F7FF" />
-        </svg>
+      {/* FULL-WIDTH DESKTOP IMAGE */}
+      <div className="hidden lg:block absolute inset-0 pointer-events-none z-0">
+        <motion.div
+          className="absolute inset-0 w-full h-full"
+          initial="hidden"
+          animate="visible"
+          variants={imageVariants}
+          style={{
+            backgroundImage: 'url(/assets/latar-belakang.png)',
+            backgroundPosition: 'right center',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat'
+          }}
+          title="Counseling Session"
+        />
+      </div>
+
+      {/* DESKTOP INTERACTIVE BUBBLE */}
+      {isMounted && (
+        <motion.div
+          animate={prefersReducedMotion ? {} : { y: [0, -10, 0] }}
+          transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+          className="hidden lg:block absolute z-30 pointer-events-auto
+                     top-[30%] right-[32%] xl:right-[35%]
+                     bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] px-4 py-2.5 max-w-[220px]
+                     rounded-2xl
+                     shadow-[0_12px_25px_-5px_rgba(29,78,216,0.3),inset_2px_2px_3px_rgba(255,255,255,0.3),inset_-1px_-1px_3px_rgba(0,0,0,0.1)]
+                     font-sans font-medium text-white text-[13px] leading-snug"
+        >
+          <TypewriterText text={chatText} />
+        </motion.div>
+      )}
+
+      <div className="relative z-10 w-full max-w-[1280px] mx-auto px-6 h-full flex flex-col lg:flex-row items-center justify-center lg:justify-between flex-1 py-12 lg:py-0">
+
+        {/* MOBILE & TABLET IMAGE (Visible < 1024px) */}
+        <motion.div
+          className="lg:hidden relative w-full aspect-[4/3] sm:aspect-[16/9] rounded-3xl overflow-hidden shadow-2xl mb-10 border border-white/50"
+          initial="hidden"
+          animate="visible"
+          variants={imageVariants}
+        >
+          <div
+            className="absolute inset-0 w-full h-full"
+            style={{
+              backgroundImage: 'url(/assets/latar-belakang.png)',
+              backgroundPosition: '70% center', // Focus on the women
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat'
+            }}
+            title="Counseling Session"
+          />
+
+          {/* MOBILE INTERACTIVE BUBBLE */}
+          {isMounted && (
+            <motion.div
+              animate={prefersReducedMotion ? {} : { y: [0, -8, 0] }}
+              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+              className="absolute z-10 pointer-events-auto
+                         top-[22%] left-[12%] sm:left-[18%]
+                         bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] px-3.5 py-2 max-w-[180px]
+                         rounded-[14px]
+                         shadow-[0_10px_20px_-5px_rgba(29,78,216,0.3),inset_1px_1px_2px_rgba(255,255,255,0.3),inset_-1px_-1px_2px_rgba(0,0,0,0.1)]
+                         font-sans font-medium text-white text-[11px] leading-tight"
+            >
+              <TypewriterText text={chatText} />
+            </motion.div>
+          )}
+        </motion.div>
+
+        {/* LEFT COLUMN: TEXT & CTA */}
+        <motion.div
+          className="relative z-20 w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.h1
+            variants={fadeUpVariants}
+            className="text-[clamp(2.5rem,5vw,4rem)] font-extrabold leading-[1.1] tracking-tight text-neutral-900 mb-6"
+          >
+            Ceritamu Layak <br className="hidden lg:block" />
+            <span className="text-[#2563EB]">Didengar &amp; Dimengerti</span>
+          </motion.h1>
+
+          <motion.p
+            variants={fadeUpVariants}
+            className="text-neutral-500 text-lg md:text-xl leading-relaxed mb-10 max-w-[520px]"
+          >
+            Ruang aman untuk setiap ceritamu🤗. Konseling bersama konselor &amp; psikolog klinis profesional.
+          </motion.p>
+
+          <motion.div variants={fadeUpVariants} className="flex flex-wrap gap-4 justify-center lg:justify-start">
+            <Link
+              href="/konsultasi"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-full font-bold text-lg shadow-[0_8px_30px_rgba(37,99,235,0.25)] hover:shadow-[0_12px_40px_rgba(37,99,235,0.35)] transition-all duration-300 hover:-translate-y-1"
+            >
+              Mulai Konseling
+              <svg className="w-5 h-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </Link>
+            <Link
+              href="#cara-kerja"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-transparent border-2 border-[#BFDBFE] hover:border-[#2563EB] hover:bg-[#EFF6FF] text-[#2563EB] rounded-full font-bold text-lg transition-all duration-300 hover:-translate-y-1"
+            >
+              Lihat Cara Kerja
+            </Link>
+          </motion.div>
+
+          <motion.div variants={fadeUpVariants} className="mt-6 flex items-center justify-center lg:justify-start gap-2 text-[0.95rem] text-neutral-500 font-medium">
+            <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Mulai dari <span className="text-[#2563EB] font-extrabold">Rp20.000</span> per sesi
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   )

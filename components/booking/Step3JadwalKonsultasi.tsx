@@ -12,12 +12,12 @@ import { Loader2, AlertCircle } from "lucide-react";
 import { toZonedTime } from "date-fns-tz";
 
 const TIME_SLOTS = [
-  "09:00 WIB",
-  "10:00 WIB",
-  "11:00 WIB",
-  "13:00 WIB",
-  "14:00 WIB",
-  "15:00 WIB",
+  "09:00 - 10:00 WIB",
+  "10:00 - 11:00 WIB",
+  "11:00 - 12:00 WIB",
+  "13:00 - 14:00 WIB",
+  "14:00 - 15:00 WIB",
+  "15:00 - 16:00 WIB",
 ];
 
 export function Step3JadwalKonsultasi() {
@@ -27,7 +27,6 @@ export function Step3JadwalKonsultasi() {
   const [slotError, setSlotError] = useState<string | null>(null);
 
   const selectedDate = useWatch({ control, name: "tanggal_konsultasi" });
-  const jumlahSesi = useWatch({ control, name: "jumlah_sesi" }) || 1;
   const selectedWaktu = useWatch({ control, name: "waktu_konsultasi" });
 
   const fetchBookedSlots = useCallback(async (date: Date) => {
@@ -43,6 +42,7 @@ export function Step3JadwalKonsultasi() {
     }
   }, []);
 
+  // When selectedDate changes, reset time selection
   useEffect(() => {
     if (selectedDate) {
       fetchBookedSlots(selectedDate);
@@ -51,40 +51,8 @@ export function Step3JadwalKonsultasi() {
     }
   }, [selectedDate, fetchBookedSlots, setValue]);
 
-  // When session duration changes, reset time selection
-  useEffect(() => {
-    setValue("waktu_konsultasi", "");
-    setSlotError(null);
-  }, [jumlahSesi, setValue]);
-
   const handleTimeSlotSelect = (time: string) => {
     setSlotError(null);
-    
-    if (jumlahSesi === 2) {
-      const startIndex = TIME_SLOTS.indexOf(time);
-      if (startIndex === -1) return;
-      
-      // Check if it's the last slot
-      if (startIndex === TIME_SLOTS.length - 1) {
-        setSlotError("Sesi 2 jam membutuhkan 2 slot berurutan. Ini adalah slot terakhir hari ini.");
-        return;
-      }
-      
-      const currentSlot = TIME_SLOTS[startIndex];
-      const nextSlot = TIME_SLOTS[startIndex + 1];
-      
-      if (currentSlot === "11:00 WIB" && nextSlot === "13:00 WIB") {
-        setSlotError("Waktu istirahat jam 12:00. Tidak dapat memesan sesi berurutan melewati jam istirahat.");
-        return;
-      }
-      
-      // Check if next slot is booked
-      if (bookedSlots.includes(nextSlot)) {
-        setSlotError("Slot berikutnya sudah penuh. Sesi 2 jam membutuhkan 2 slot berurutan yang tersedia.");
-        return;
-      }
-    }
-    
     setValue("waktu_konsultasi", time);
     clearErrors("waktu_konsultasi");
   };
@@ -101,38 +69,11 @@ export function Step3JadwalKonsultasi() {
   };
 
   const basePrice = parseInt(process.env.NEXT_PUBLIC_CONSULTATION_BASE_PRICE || "20000");
-  const totalPrice = basePrice * jumlahSesi;
+  const totalPrice = basePrice;
 
   return (
     <div className="space-y-10 font-sans text-[#0F172A]">
-      {/* Session Selector */}
-      <FormField
-        control={control}
-        name="jumlah_sesi"
-        render={({ field }) => (
-          <FormItem className="space-y-3 bg-white p-6 rounded-2xl border border-[#E2E8F0] shadow-sm">
-            <FormLabel className="text-base font-semibold">Durasi Konsultasi *</FormLabel>
-            <FormDescription>Pilih durasi sesi yang Anda butuhkan (Maksimal 2 sesi/hari).</FormDescription>
-            <FormControl>
-              <RadioGroup
-                onValueChange={(val) => field.onChange(parseInt(val))}
-                value={field.value?.toString() || "1"}
-                className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-3 pt-2"
-              >
-                <SelectableChip value="1" className="items-start text-left px-5">
-                  <span className="font-bold text-[#0F172A] mb-1">1 Sesi (1 Jam)</span>
-                  <span className="text-sm font-medium text-[#2563EB]">Rp 20.000</span>
-                </SelectableChip>
-                <SelectableChip value="2" className="items-start text-left px-5">
-                  <span className="font-bold text-[#0F172A] mb-1">2 Sesi (2 Jam)</span>
-                  <span className="text-sm font-medium text-[#2563EB]">Rp 40.000</span>
-                </SelectableChip>
-              </RadioGroup>
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      {/* Session Selector removed */}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Calendar Selection */}
@@ -182,15 +123,6 @@ export function Step3JadwalKonsultasi() {
                       const isBooked = bookedSlots.includes(time);
                       const isSelected = field.value === time;
                       
-                      // For 2 sessions UI feedback: highlight the second slot too
-                      let isSecondSlot = false;
-                      if (jumlahSesi === 2 && field.value) {
-                        const startIdx = TIME_SLOTS.indexOf(field.value);
-                        if (startIdx !== -1 && idx === startIdx + 1) {
-                          isSecondSlot = true;
-                        }
-                      }
-                      
                       return (
                         <div key={time}>
                           <button
@@ -200,7 +132,7 @@ export function Step3JadwalKonsultasi() {
                             className={`w-full flex flex-col items-center justify-center rounded-xl border-2 p-4 text-sm font-medium transition-all duration-200
                               ${isBooked 
                                 ? "border-[#E2E8F0] bg-[#F1F5F9] text-[#94A3B8] cursor-not-allowed opacity-60" 
-                                : isSelected || isSecondSlot
+                                : isSelected
                                 ? "border-[#2563EB] bg-[#EFF6FF] text-[#1D4ED8]"
                                 : "border-[#E2E8F0] bg-white hover:bg-[#F8FAFC] hover:border-[#CBD5E1] text-[#334155]"
                               }
@@ -208,7 +140,6 @@ export function Step3JadwalKonsultasi() {
                           >
                             <span>{time}</span>
                             {isBooked && <span className="text-[10px] mt-1 text-red-500 font-bold uppercase tracking-wider">Full</span>}
-                            {!isBooked && isSecondSlot && <span className="text-[10px] mt-1 text-[#2563EB] font-semibold">(Sesi 2)</span>}
                           </button>
                         </div>
                       )
@@ -281,7 +212,7 @@ export function Step3JadwalKonsultasi() {
               <div>
                 <p className="text-sm text-[#64748B] mb-1 font-medium">Durasi</p>
                 <p className="text-base font-semibold text-[#0F172A]">
-                  {jumlahSesi} Sesi ({jumlahSesi} Jam)
+                  1 Jam
                 </p>
               </div>
               <div>

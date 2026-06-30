@@ -1,120 +1,93 @@
 'use client'
 
-import { useRef, useCallback } from 'react'
+import ScrollReveal, { ScrollRevealItem } from '@/components/ui/ScrollReveal'
 
 const services = [
   {
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2E86DE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
-        <rect x="8" y="2" width="8" height="4" rx="1"/>
-        <path d="M12 11v6"/><path d="M9 14h6"/>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>
       </svg>
     ),
-    title: 'Konseling Individual',
-    desc: 'Sesi tatap muka virtual privat dengan psikolog berpengalaman. Jadwal fleksibel, sepenuhnya rahasia.',
-    color: '#2E86DE',
-    bgIcon: '#EBF4FF',
-  },
-  {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-        <circle cx="9" cy="7" r="4"/>
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-      </svg>
-    ),
-    title: 'Komunitas Dukungan',
-    desc: 'Bergabung dengan grup dukungan yang dipandu profesional. Berbagi cerita, saling menguatkan.',
+    title: 'Konseling Individu',
+    desc: 'Tersedia secara Online (Google Meet) dari mana saja, atau sesi Offline (Tatap Muka) khusus di area Kota Serang.',
     featured: true,
-    badge: 'Terpopuler',
+    badge: 'Layanan Utama',
   },
   {
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2E86DE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
       </svg>
     ),
-    title: 'Alat Self-Care',
-    desc: 'Jurnal mood, meditasi terpandu, dan latihan mindfulness yang dirancang oleh para ahli.',
-    color: '#2E86DE',
-    bgIcon: '#EBF4FF',
+    title: 'Mudah via WhatsApp',
+    desc: 'Tak perlu repot unduh aplikasi baru. Admin kami akan menghubungi dan memandu jadwal Anda langsung melalui WhatsApp.',
   },
   {
     icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2E86DE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <polyline points="12 6 12 12 16 14"/>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
       </svg>
     ),
-    title: 'Bantuan Darurat 24/7',
-    desc: 'Akses bantuan krisis kapan saja. Tim profesional siap membantu dalam situasi darurat.',
-    color: '#2E86DE',
-    bgIcon: '#EBF4FF',
+    title: 'Sangat Terjangkau',
+    desc: 'Hanya Rp20.000 per sesi (1 Jam). Kami hadir untuk memastikan kesehatan mental bisa diakses oleh siapa saja.',
+  },
+  {
+    icon: (
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    ),
+    title: '100% Kerahasiaan',
+    desc: 'Ruang aman untuk setiap ceritamu. Identitas dan seluruh percakapan dijamin privasinya secara profesional.',
+    featured: true,
   },
 ]
 
 export default function ServicesSection() {
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    const card = e.currentTarget
-    const rect = card.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    const centerX = rect.width / 2
-    const centerY = rect.height / 2
-    const rotateX = ((y - centerY) / centerY) * -8
-    const rotateY = ((x - centerX) / centerX) * 8
-    card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`
-  }, [])
-
-  const handleMouseLeave = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.transform = ''
-  }, [])
-
   return (
-    <section id="services" className="py-20 bg-white">
+    <section id="layanan" className="scroll-mt-24 pt-8 pb-20 md:pt-16 md:pb-28 bg-white">
       <div className="max-w-container mx-auto px-6">
-        <div className="text-center mb-14">
-          <h2 className="font-display text-[clamp(1.8rem,4vw,2.6rem)] font-bold text-neutral-900 mb-4">
-            Layanan Kami
+        <ScrollReveal variant="fade-up" className="text-center mb-16">
+          <p className="text-sm font-semibold text-blue-600 uppercase tracking-widest mb-3">Layanan Kami</p>
+          <h2 className="text-[clamp(1.6rem,4vw,2.4rem)] font-extrabold text-neutral-900 mb-4">
+            Layanan yang Dirancang Untukmu
           </h2>
-          <p className="text-neutral-500 max-w-lg mx-auto">
-            Berbagai layanan kesehatan mental yang dirancang untuk kebutuhanmu
+          <p className="text-neutral-500 max-w-lg mx-auto text-lg">
+            Akses konseling profesional dengan cara yang mudah, terjangkau, dan sepenuhnya rahasia
           </p>
-        </div>
+        </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <ScrollReveal staggerChildren={0.12} className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl mx-auto">
           {services.map((svc) => (
-            <div
-              key={svc.title}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              className={`card-tilt rounded-xl p-8 border cursor-default ${
-                svc.featured
-                  ? 'bg-gradient-to-br from-blue-500 to-blue-700 border-transparent text-white relative'
-                  : 'bg-white border-neutral-200 shadow-sm hover:shadow-lg'
-              }`}
-            >
-              {svc.badge && (
-                <span className="absolute top-4 right-4 bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full backdrop-blur-sm">
-                  {svc.badge}
-                </span>
-              )}
-              <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-5 ${
-                svc.featured ? 'bg-white/15' : 'bg-blue-50'
-              }`}>
-                {svc.icon}
+            <ScrollRevealItem key={svc.title} variant="fade-up">
+              <div
+                className={`relative rounded-2xl p-8 border cursor-default transition-all duration-300 hover:-translate-y-1 ${
+                  svc.featured
+                    ? 'bg-gradient-to-br from-blue-600 to-blue-700 border-transparent text-white shadow-blue hover:shadow-blue-lg'
+                    : 'bg-white border-neutral-100 shadow-sm hover:shadow-card hover:border-blue-100'
+                }`}
+              >
+                {svc.badge && (
+                  <span className="absolute top-4 right-4 bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full backdrop-blur-sm">
+                    {svc.badge}
+                  </span>
+                )}
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${
+                  svc.featured ? 'bg-white/15 text-white' : 'bg-blue-50 text-blue-600'
+                }`}>
+                  {svc.icon}
+                </div>
+                <h3 className={`text-lg font-bold mb-2 ${svc.featured ? 'text-white' : 'text-neutral-900'}`}>
+                  {svc.title}
+                </h3>
+                <p className={`text-sm leading-relaxed ${svc.featured ? 'text-blue-100' : 'text-neutral-500'}`}>
+                  {svc.desc}
+                </p>
               </div>
-              <h3 className={`text-lg font-bold mb-2 ${svc.featured ? 'text-white' : 'text-neutral-900'}`}>
-                {svc.title}
-              </h3>
-              <p className={`text-sm leading-relaxed ${svc.featured ? 'text-blue-100' : 'text-neutral-500'}`}>
-                {svc.desc}
-              </p>
-            </div>
+            </ScrollRevealItem>
           ))}
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   )

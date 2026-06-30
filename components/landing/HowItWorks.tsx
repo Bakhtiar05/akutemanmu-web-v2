@@ -1,51 +1,78 @@
-import Image from 'next/image'
+'use client'
+
+import ScrollReveal, { ScrollRevealItem } from '@/components/ui/ScrollReveal'
 
 const steps = [
-  { num: '01', title: 'Buat Akunmu', desc: 'Daftar gratis dalam hitungan detik. Tidak perlu kartu kredit atau komitmen jangka panjang.' },
-  { num: '02', title: 'Pilih Psikolog Ideal', desc: 'Jelajahi profil psikolog bersertifikat. Filter berdasarkan spesialisasi, bahasa, dan jadwal.' },
-  { num: '03', title: 'Mulai Sesi Pertamamu', desc: 'Lakukan sesi konseling pertamamu secara gratis. Video call atau chat, sesuai kenyamananmu.' },
+  {
+    num: '01',
+    title: 'Booking Jadwal',
+    desc: 'Pilih tanggal dan waktu yang nyaman untukmu. Proses booking mudah dan cepat, tanpa alur yang rumit.',
+    icon: '📅',
+  },
+  {
+    num: '02',
+    title: 'Selesaikan Pembayaran',
+    desc: 'Bayar hanya Rp20.000 per sesi (1 jam). Pembayaran aman dan instan melalui berbagai metode.',
+    icon: '💳',
+  },
+  {
+    num: '03',
+    title: 'Konfirmasi via WhatsApp',
+    desc: 'Admin kami akan segera menghubungimu melalui WhatsApp untuk memandu jadwal dan memberikan tautan Google Meet atau detail lokasi.',
+    icon: '💬',
+  },
+  {
+    num: '04',
+    title: 'Mulai Sesi Konseling',
+    desc: 'Temui konselor atau psikolog Anda secara Online atau tatap muka. Ceritakan apa yang kamu rasakan di ruang yang 100% rahasia.',
+    icon: '🌱',
+  },
 ]
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-20 bg-neutral-50">
-      <div className="max-w-container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        {/* Steps */}
-        <div>
-          <h2 className="font-display text-[clamp(1.8rem,4vw,2.6rem)] font-bold text-neutral-900 mb-12">
-            Bagaimana Cara Kerjanya?
+    <section id="cara-kerja" className="scroll-mt-24 py-20 md:py-28 bg-neutral-50">
+      <div className="max-w-container mx-auto px-6">
+        <ScrollReveal variant="fade-up" className="text-center mb-16">
+          <p className="text-sm font-semibold text-blue-600 uppercase tracking-widest mb-3">Cara Kerja</p>
+          <h2 className="text-[clamp(1.6rem,4vw,2.4rem)] font-extrabold text-neutral-900 mb-4">
+            Semudah 4 Langkah
           </h2>
+          <p className="text-neutral-500 max-w-lg mx-auto text-lg">
+            Tanpa alur rumit. Dari booking sampai konseling, semuanya dirancang agar kamu bisa mulai secepat mungkin.
+          </p>
+        </ScrollReveal>
 
-          <div className="relative pl-10">
+        <ScrollReveal staggerChildren={0.15} className="max-w-3xl mx-auto">
+          <div className="relative">
             {/* Connecting line */}
-            <div className="absolute left-[18px] top-2 bottom-2 w-px bg-blue-200" />
+            <div className="absolute left-6 md:left-8 top-12 bottom-12 w-px bg-gradient-to-b from-blue-200 via-blue-300 to-blue-200 hidden md:block" aria-hidden="true" />
 
-            <div className="space-y-10">
+            <div className="space-y-6">
               {steps.map((step) => (
-                <div key={step.num} className="relative">
-                  <div className="absolute -left-10 top-0 w-9 h-9 rounded-full bg-blue-500 text-white text-sm font-bold flex items-center justify-center z-10">
-                    {step.num}
+                <ScrollRevealItem key={step.num} variant="fade-up">
+                  <div className="relative flex gap-5 md:gap-8 items-start group">
+                    {/* Step number circle */}
+                    <div className="relative z-10 flex-shrink-0 w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-white border-2 border-blue-100 group-hover:border-blue-400 flex items-center justify-center shadow-sm group-hover:shadow-md transition-all duration-300">
+                      <span className="text-2xl">{step.icon}</span>
+                    </div>
+
+                    {/* Content card */}
+                    <div className="flex-1 bg-white rounded-2xl p-6 md:p-8 border border-neutral-100 group-hover:border-blue-100 shadow-sm group-hover:shadow-card transition-all duration-300">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
+                          Langkah {step.num}
+                        </span>
+                      </div>
+                      <h3 className="text-lg font-bold text-neutral-900 mb-2">{step.title}</h3>
+                      <p className="text-sm text-neutral-500 leading-relaxed">{step.desc}</p>
+                    </div>
                   </div>
-                  <h3 className="text-lg font-bold text-neutral-900 mb-2">{step.title}</h3>
-                  <p className="text-neutral-500 text-sm leading-relaxed max-w-sm">{step.desc}</p>
-                </div>
+                </ScrollRevealItem>
               ))}
             </div>
           </div>
-        </div>
-
-        {/* Illustration */}
-        <div className="relative hidden lg:block">
-          <Image src="/assets/services_illustration.png" alt="Cara kerja YukceritaIN" width={480} height={440} className="w-full h-auto" />
-
-          <div className="absolute bottom-8 left-4 bg-white rounded-xl shadow-lg px-4 py-3 flex items-center gap-3 animate-gentle-bounce">
-            <span className="w-2.5 h-2.5 rounded-full bg-green-400" />
-            <div>
-              <p className="text-sm font-semibold text-neutral-900">1,248</p>
-              <p className="text-xs text-neutral-400">pengguna online sekarang</p>
-            </div>
-          </div>
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   )

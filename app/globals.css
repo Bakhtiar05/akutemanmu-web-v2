@@ -44,7 +44,7 @@ body {
    ============================================ */
 
 .gradient-text {
-  background: linear-gradient(135deg, #2E86DE 0%, #5BA4E8 50%, #8E44AD 100%);
+  background: linear-gradient(135deg, #2563EB 0%, #3B82F6 40%, #60A5FA 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -72,56 +72,57 @@ body {
 }
 
 .btn-primary {
-  background: #2E86DE;
+  background: #2563EB;
   color: #FFFFFF;
   padding: 14px 32px;
   font-size: 0.95rem;
-  box-shadow: 0 8px 32px rgba(46, 134, 222, 0.28);
+  box-shadow: 0 8px 32px rgba(37, 99, 235, 0.25);
 }
 
 .btn-primary:hover {
-  background: #1D6DC0;
+  background: #1D4ED8;
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(46, 134, 222, 0.36);
+  box-shadow: 0 12px 40px rgba(37, 99, 235, 0.35);
 }
 
 .btn-outline {
   background: transparent;
-  color: #2E86DE;
-  border: 2px solid #2E86DE;
+  color: #2563EB;
+  border: 2px solid #BFDBFE;
   padding: 12px 30px;
   font-size: 0.95rem;
 }
 
 .btn-outline:hover {
-  background: #EBF4FF;
+  background: #EFF6FF;
+  border-color: #2563EB;
   transform: translateY(-2px);
 }
 
 .btn-ghost {
   background: transparent;
-  color: #445569;
+  color: #475569;
   padding: 10px 20px;
   font-size: 0.92rem;
 }
 
 .btn-ghost:hover {
-  background: #EBF4FF;
-  color: #2E86DE;
+  background: #EFF6FF;
+  color: #2563EB;
 }
 
 .btn-white {
   background: #FFFFFF;
-  color: #2E86DE;
+  color: #2563EB;
   padding: 14px 32px;
   font-size: 0.95rem;
   font-weight: 700;
-  box-shadow: 0 4px 16px rgba(14, 40, 80, 0.10);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
 }
 
 .btn-white:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(14, 40, 80, 0.14);
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.12);
 }
 
 .btn-outline-white {
@@ -186,37 +187,7 @@ body {
   transform: translate(0, 0);
 }
 
-/* ============================================
-   MARQUEE / LOGO STRIP
-   ============================================ */
 
-.marquee-track {
-  display: flex;
-  gap: 24px;
-  animation: marquee 22s linear infinite;
-  width: max-content;
-}
-
-.marquee-track:hover {
-  animation-play-state: paused;
-}
-
-.marquee-mask {
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 10%,
-    black 90%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 10%,
-    black 90%,
-    transparent 100%
-  );
-}
 
 /* ============================================
    SERVICE CARD 3D TILT
@@ -590,24 +561,7 @@ body {
   transform: rotate(-45deg) translate(5px, -5px);
 }
 
-/* ============================================
-   WAVE SVG
-   ============================================ */
 
-.wave-divider {
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-}
-
-.wave-divider svg {
-  display: block;
-  width: 100%;
-  height: 60px;
-}
 
 /* ============================================
    RESPONSIVE ARTICLE CONTENT

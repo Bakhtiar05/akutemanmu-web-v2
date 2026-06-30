@@ -2,7 +2,6 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import ScrollToTop from '@/components/layout/ScrollToTop'
 import HeroSection from '@/components/landing/HeroSection'
-import LogoStrip from '@/components/landing/LogoStrip'
 import ServicesSection from '@/components/landing/ServicesSection'
 import HowItWorks from '@/components/landing/HowItWorks'
 import TestimonialsSection from '@/components/landing/TestimonialsSection'
@@ -19,7 +18,6 @@ export default async function HomePage() {
       <Navbar />
       <main>
         <HeroSection />
-        <LogoStrip />
         <ServicesSection />
         <HowItWorks />
         <TestimonialsSection />

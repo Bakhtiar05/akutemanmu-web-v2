@@ -50,7 +50,7 @@ export function BookingWizard() {
   const { watch, trigger, getValues, reset } = methods;
   const formValues = watch();
   
-  const price = parseInt(process.env.NEXT_PUBLIC_CONSULTATION_BASE_PRICE || "20000") * (formValues.jumlah_sesi || 1);
+  const price = parseInt(process.env.NEXT_PUBLIC_CONSULTATION_BASE_PRICE || "20000");
 
   useEffect(() => {
     // Load from local storage
@@ -83,7 +83,7 @@ export function BookingWizard() {
     } else if (currentStep === 1) {
       fieldsToValidate = ["status", "status_lainnya", "alasan", "alasan_lainnya", "topik_permasalahan", "topik_lainnya", "ceritakan_permasalahan"];
     } else if (currentStep === 2) {
-      fieldsToValidate = ["tanggal_konsultasi", "waktu_konsultasi", "jumlah_sesi", "metode_konsultasi"];
+      fieldsToValidate = ["tanggal_konsultasi", "waktu_konsultasi", "metode_konsultasi"];
     } else if (currentStep === 3) {
       fieldsToValidate = ["urutan_konseling", "sumber_informasi", "sumber_informasi_lainnya"];
     }
@@ -255,7 +255,7 @@ export function BookingWizard() {
               <span className="text-sm font-medium text-[#0F172A] text-right">
                 {formValues.tanggal_konsultasi ? format(new Date(formValues.tanggal_konsultasi), "dd MMMM yyyy", { locale: id }) : ""}
                 <br />
-                {formValues.waktu_konsultasi} WIB ({formValues.jumlah_sesi} Sesi)
+                {formValues.waktu_konsultasi} (1 Jam)
               </span>
             </div>
             <div className="flex justify-between items-start pt-1">
