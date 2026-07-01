@@ -19,11 +19,11 @@ const DynamicTextSwap = () => {
 
   return (
     <div className="flex flex-col items-center lg:items-start w-full">
-      <span className="text-slate-800 text-[clamp(2.5rem,5vw,4rem)] font-extrabold leading-[1.1] tracking-tight">
+      <span className="text-slate-800 text-[2.8rem] md:text-[clamp(2.5rem,5vw,4rem)] font-extrabold leading-[1.05] tracking-tight">
         Ceritamu Layak
       </span>
       {/* Stable container height to prevent layout shift */}
-      <div className="relative h-[48px] md:h-[64px] lg:h-[80px] w-full flex justify-center lg:justify-start mt-2 md:mt-3">
+      <div className="relative h-[52px] md:h-[64px] lg:h-[80px] w-full flex justify-center lg:justify-start mt-1 md:mt-3">
         <AnimatePresence>
           <motion.span
             key={index}
@@ -31,7 +31,7 @@ const DynamicTextSwap = () => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -25, opacity: 0 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="absolute font-bold text-4xl md:text-5xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400 pb-2 md:pb-3 lg:pb-4"
+            className="absolute font-bold text-[2.8rem] md:text-5xl lg:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-blue-400 pb-2 md:pb-3 lg:pb-4"
           >
             {dynamicWords[index]}
           </motion.span>
@@ -98,7 +98,7 @@ export default function HeroSection() {
 
       {/* MOBILE & TABLET FULL-BLEED IMAGE (Visible < 1024px) */}
       <motion.div
-        className="lg:hidden relative w-full h-[55vh] sm:h-[65vh] -mt-[72px] mb-8 overflow-hidden z-0"
+        className="lg:hidden relative w-full h-[55vh] sm:h-[65vh] -mt-[72px] mb-2 overflow-hidden z-0"
         initial="hidden"
         animate="visible"
         variants={imageVariants}
@@ -179,31 +179,31 @@ export default function HeroSection() {
         >
           <motion.div
             variants={fadeUpVariants}
-            className="mb-8 w-full"
+            className="mb-4 md:mb-8 w-full"
           >
             <DynamicTextSwap />
           </motion.div>
 
           <motion.p
             variants={fadeUpVariants}
-            className="text-neutral-500 text-lg md:text-xl leading-relaxed mb-10 max-w-[520px]"
+            className="text-neutral-500 text-lg md:text-xl leading-relaxed mb-6 md:mb-10 max-w-[520px]"
           >
             Ruang aman untuk setiap ceritamu🤗. Konseling bersama konselor &amp; psikolog klinis profesional.
           </motion.p>
 
-          <motion.div variants={fadeUpVariants} className="flex flex-wrap gap-4 justify-center lg:justify-start">
+          <motion.div variants={fadeUpVariants} className="flex flex-row gap-3 md:gap-4 justify-center lg:justify-start w-full">
             <Link
               href="/konsultasi"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-full font-bold text-lg shadow-[0_8px_30px_rgba(37,99,235,0.25)] hover:shadow-[0_12px_40px_rgba(37,99,235,0.35)] transition-all duration-300 hover:-translate-y-1"
+              className="inline-flex items-center justify-center gap-1.5 md:gap-2 px-5 md:px-8 py-3.5 md:py-4 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-full font-bold text-[15px] md:text-lg shadow-[0_8px_30px_rgba(37,99,235,0.25)] hover:shadow-[0_12px_40px_rgba(37,99,235,0.35)] transition-all duration-300 hover:-translate-y-1 whitespace-nowrap"
             >
               Mulai Konseling
-              <svg className="w-5 h-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </Link>
             <Link
               href="#cara-kerja"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-transparent border-2 border-[#BFDBFE] hover:border-[#2563EB] hover:bg-[#EFF6FF] text-[#2563EB] rounded-full font-bold text-lg transition-all duration-300 hover:-translate-y-1"
+              className="inline-flex items-center justify-center gap-1.5 md:gap-2 px-5 md:px-8 py-3.5 md:py-4 bg-transparent border-2 border-[#BFDBFE] hover:border-[#2563EB] hover:bg-[#EFF6FF] text-[#2563EB] rounded-full font-bold text-[15px] md:text-lg transition-all duration-300 hover:-translate-y-1 whitespace-nowrap"
             >
               Lihat Cara Kerja
             </Link>

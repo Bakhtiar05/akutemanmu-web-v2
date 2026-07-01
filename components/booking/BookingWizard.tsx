@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { bookingSchema, BookingFormData, defaultBookingValues } from "@/lib/schemas/booking";
@@ -30,6 +30,7 @@ export function BookingWizard() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const submittingRef = useRef(false); // Guard against double-submission on mobile
   const router = useRouter();
   const { toast } = useToast();
   const methods = useForm<BookingFormData>({
@@ -102,10 +103,19 @@ export function BookingWizard() {
   };
 
   const handleFinalSubmit = async () => {
+    // Guard against double-submission (especially important on mobile touch events)
+    if (submittingRef.current) {
+      console.log("[BookingWizard] Submit already in progress, ignoring duplicate click");
+      return;
+    }
+
+    console.log("[BookingWizard] Submit button clicked");
+
+    console.log("[BookingWizard] Validating form...");
     const isValid = await trigger();
     if (!isValid) {
       const errors = methods.formState.errors;
-      console.log("Form validation errors:", errors);
+      console.log("[BookingWizard] Form validation errors:", errors);
       toast({
         variant: "destructive",
         title: "Validasi Gagal",
@@ -113,11 +123,25 @@ export function BookingWizard() {
       });
       return;
     }
+    console.log("[BookingWizard] Validation passed");
 
     setIsSubmitting(true);
+    submittingRef.current = true;
     try {
       const data = getValues();
+      console.log("[BookingWizard] Payload prepared, dates:", {
+        tanggal_lahir: data.tanggal_lahir,
+        tanggal_lahir_type: typeof data.tanggal_lahir,
+        tanggal_lahir_isDate: data.tanggal_lahir instanceof Date,
+        tanggal_konsultasi: data.tanggal_konsultasi,
+        tanggal_konsultasi_type: typeof data.tanggal_konsultasi,
+        tanggal_konsultasi_isDate: data.tanggal_konsultasi instanceof Date,
+      });
+
+      console.log("[BookingWizard] Calling submitBooking server action...");
       const res = await submitBooking(data);
+      console.log("[BookingWizard] Server action response:", res);
+
       if (res.success && res.requestNumber) {
         try {
           localStorage.removeItem("booking-draft");
@@ -129,21 +153,23 @@ export function BookingWizard() {
           description: "Permohonan Anda berhasil dikirim. Mengalihkan ke halaman status...",
         });
         
+        console.log("[BookingWizard] Redirecting to success page:", res.requestNumber);
         router.push(`/booking/success?request_number=${res.requestNumber}`);
-        // Add a fallback reset just in case router.push takes time
-        setTimeout(() => {
-          setIsSubmitting(false);
-        }, 3000);
       } else {
         throw new Error(res.error || "Gagal menyimpan data");
       }
     } catch (error: any) {
+      console.error("[BookingWizard] Submission error:", error);
       toast({
         variant: "destructive",
         title: "Gagal",
         description: error.message || "Terjadi kesalahan saat mengirim permohonan. Silakan coba lagi.",
       });
+    } finally {
+      // Always reset submission state so the user can retry if needed
       setIsSubmitting(false);
+      submittingRef.current = false;
+      console.log("[BookingWizard] Submission flow complete, loading state reset");
     }
   };
 

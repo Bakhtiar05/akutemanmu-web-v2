@@ -1,10 +1,10 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function getPaymentAndBookingDetails(requestNumber: string) {
   try {
-    const supabase = await createClient();
+    const supabase = createAdminClient();
 
     const { data: booking, error: bookingError } = await supabase
       .from("consultation_requests")
