@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { motion, useReducedMotion, Variants, AnimatePresence } from 'framer-motion'
-
 
 const dynamicWords = ["Didengar", "Dimengerti", "Divalidasi", "Dihargai"];
 
@@ -121,16 +121,18 @@ export default function HeroSection() {
   }
 
   return (
-    <section id="hero" className="relative w-full min-h-[100vh] bg-[#F8FBFF] overflow-hidden flex flex-col justify-center pt-[72px]">
+    <section id="hero" className="relative w-full min-h-[100vh] bg-[#F8FBFF] overflow-hidden flex flex-col justify-center pt-0 md:pt-[72px]">
       {/* Subtle Background Effects */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="absolute top-[10%] left-[20%] w-[400px] h-[400px] rounded-full bg-[#2563EB]/[0.03] blur-[100px]" />
         <div className="absolute bottom-[20%] right-[10%] w-[500px] h-[500px] rounded-full bg-[#3B82F6]/[0.04] blur-[120px]" />
       </div>
 
+
+
       {/* MOBILE & TABLET FULL-BLEED IMAGE (Visible < 1024px) */}
       <motion.div
-        className="lg:hidden relative w-full h-[55vh] sm:h-[65vh] -mt-[72px] overflow-hidden z-0"
+        className="lg:hidden relative w-full h-[55vh] sm:h-[65vh] -mt-16 md:-mt-[72px] overflow-hidden z-0"
         initial="hidden"
         animate="visible"
         variants={imageVariants}
@@ -204,7 +206,7 @@ export default function HeroSection() {
 
         {/* LEFT COLUMN: TEXT & CTA */}
         <motion.div
-          className="relative z-20 w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left -mt-12 md:-mt-16 lg:mt-0"
+          className="relative z-20 w-full lg:w-1/2 flex flex-col items-center lg:items-start text-center lg:text-left -mt-20 md:-mt-16 lg:mt-0"
           variants={containerVariants}
           initial="hidden"
           animate="visible"

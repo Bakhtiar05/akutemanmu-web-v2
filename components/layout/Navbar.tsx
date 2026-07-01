@@ -48,7 +48,7 @@ export default function Navbar({ variant = 'default' }: NavbarProps) {
   return (
     <>
       <header
-        className={`fixed inset-x-0 z-[1000] transition-all duration-500 flex justify-center w-full px-4 sm:px-6 lg:px-8 ${
+        className={`hidden md:flex fixed inset-x-0 z-[1000] transition-all duration-500 justify-center w-full px-4 sm:px-6 lg:px-8 ${
           scrolled ? 'top-3 md:top-4' : 'top-4 md:top-6'
         }`}
       >
@@ -63,7 +63,7 @@ export default function Navbar({ variant = 'default' }: NavbarProps) {
           <div className="flex-1 flex justify-start items-center">
             <Link href="/" className="flex items-center gap-3 flex-shrink-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg">
               <Image
-                src="/assets/logov2_yukceritain.png"
+                src="/assets/logo-v4.png"
                 alt="YukceritaIN Logo"
                 width={200}
                 height={200}
